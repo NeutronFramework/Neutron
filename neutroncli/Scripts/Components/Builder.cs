@@ -20,11 +20,12 @@ public static class Builder
 
         try
         {
-            projectConfig = JsonSerializer.Deserialize<ProjectConfig>(File.ReadAllText("config.json"));
+            projectConfig = JsonSerializer.Deserialize<ProjectConfig>(File.ReadAllText("config.json"), SourceGenerationContext.Default.ProjectConfig);
         }
         catch (Exception exception)
         {
             ConsoleError.NoNeutronProjectPresent();
+            Console.WriteLine(exception);
             return null;
         }
 

@@ -6,12 +6,14 @@
         <Nullable>enable</Nullable>
         <WarningsAsErrors>Nullable</WarningsAsErrors>
         <InvariantGlobalization>True</InvariantGlobalization>
-        <PublishSingleFile>True</PublishSingleFile>
+        <JsonSerializerIsReflectionEnabledByDefault>False</JsonSerializerIsReflectionEnabledByDefault>
+        <PublishTrimmed>True</PublishTrimmed>
+        <PublishAot>True</PublishAot>
     </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="CliWrap" Version="3.6.6" />
-        <PackageReference Include="McMaster.Extensions.CommandLineUtils" Version="4.1.1" />
+        <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
     </ItemGroup>
 
     <ItemGroup>

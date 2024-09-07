@@ -1,4 +1,6 @@
-﻿namespace NeutronCli.Scripts.DataStructures;
+﻿using System.Text.Json.Serialization;
+
+namespace NeutronCli.Scripts.DataStructures;
 
 public class ProjectConfig
 {
@@ -14,4 +16,12 @@ public class ProjectConfig
         FrontendName = frontendName;
         BackendName = backendName;
     }
+}
+
+
+[JsonSourceGenerationOptions(WriteIndented = true)]
+[JsonSerializable(typeof(ProjectConfig))]
+internal partial class SourceGenerationContext : JsonSerializerContext
+{
+
 }

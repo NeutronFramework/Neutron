@@ -81,7 +81,7 @@ internal class Program
     {
         ProjectConfig projectConfig = new ProjectConfig(projectName, dotnetVersion, frontendName, backendName);
 
-        string jsonString = JsonSerializer.Serialize(projectConfig, new JsonSerializerOptions() { WriteIndented = true });
+        string jsonString = JsonSerializer.Serialize(projectConfig, SourceGenerationContext.Default.ProjectConfig);
 
         File.WriteAllText(Path.Combine(projectName, "config.json"), jsonString);
     }
