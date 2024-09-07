@@ -1,0 +1,49 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <WarningsAsErrors>Nullable</WarningsAsErrors>
+        <InvariantGlobalization>True</InvariantGlobalization>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)'=='Release'">
+        <DebugSymbols>False</DebugSymbols>
+        <DebugType>None</DebugType>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <PackageId>Neutron</PackageId>
+        <Version>0.0.6</Version>
+        <Title>Neutron</Title>
+        <Description>Build apps with c# and web technologies using webview</Description>
+        <Authors>AnnasVirtual</Authors>
+        <Copyright>Copyright (c) 2024 AnnasVirtual, Copyright (c) 2018 Josh Turpen, Will Speak</Copyright>
+        <PackageProjectUrl>https://github.com/annasajkh/Neutron</PackageProjectUrl>
+        <PackageIcon>icon.png</PackageIcon>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <RepositoryType>git</RepositoryType>
+        <RepositoryUrl>https://github.com/annasajkh/Neutron</RepositoryUrl>
+        <PackageTags>csharp, webview, gui</PackageTags>
+        <PackageLicenseFile>README.md</PackageLicenseFile>
+        <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <None Include="icon.png">
+            <Pack>True</Pack>
+            <PackagePath>/</PackagePath>
+        </None>
+        <None Include="README.md">
+            <Pack>True</Pack>
+            <PackagePath>/</PackagePath>
+        </None>
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="CliWrap" Version="3.6.6" />
+        <PackageReference Include="NativeFileDialogSharp" Version="0.6.0-alpha" />
+        <PackageReference Include="SharpWebview" Version="0.10.0" />
+    </ItemGroup>
+
+</Project>
