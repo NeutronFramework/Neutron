@@ -6,7 +6,8 @@
         <Nullable>enable</Nullable>
         <WarningsAsErrors>Nullable</WarningsAsErrors>
         <InvariantGlobalization>True</InvariantGlobalization>
-        <PublishAot>True</PublishAot>
+        <PublishSingleFile>True</PublishSingleFile>
+	    <PublishTrimmed>True</PublishTrimmed>
     </PropertyGroup>
 
     <ItemGroup>
