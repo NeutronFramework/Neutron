@@ -78,7 +78,8 @@ class Program
 
             await Cli.Wrap("npm").WithArguments($"create vite@latest . -- --template {frontendFramework.ToString()!.Replace("_", "-")} .")
                                  .WithWorkingDirectory(Path.Combine(projectName, frontendName))
-                                 .ExecuteAsync();
+                                 .WithStandardOutputPipe(PipeTarget.ToDelegate(Console.WriteLine))
+                                 .ExecuteBufferedAsync();
 
             Directory.CreateDirectory(Path.Combine(projectName, projectName));
 
