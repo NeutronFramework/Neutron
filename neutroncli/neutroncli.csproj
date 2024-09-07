@@ -8,7 +8,6 @@
         <InvariantGlobalization>True</InvariantGlobalization>
         <PublishAot>True</PublishAot>
         <PublishSingleFile>True</PublishSingleFile> 
-        <PublishTrimmed>false</PublishTrimmed>
     </PropertyGroup>
 
     <ItemGroup>
