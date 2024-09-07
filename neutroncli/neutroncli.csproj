@@ -7,7 +7,6 @@
         <WarningsAsErrors>Nullable</WarningsAsErrors>
         <InvariantGlobalization>True</InvariantGlobalization>
         <PublishSingleFile>True</PublishSingleFile>
-	    <PublishTrimmed>True</PublishTrimmed>
     </PropertyGroup>
 
     <ItemGroup>
