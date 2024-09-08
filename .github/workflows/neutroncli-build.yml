@@ -1,4 +1,4 @@
-name: Build, Package, and Publish neutroncli
+name: Publish neutroncli
 
 on:
   push:
