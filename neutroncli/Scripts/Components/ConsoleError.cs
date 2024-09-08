@@ -2,7 +2,6 @@
 
 public static class ConsoleError
 {
-
     public static void NoNeutronProjectPresent()
     {
         Console.ForegroundColor = ConsoleColor.Red;

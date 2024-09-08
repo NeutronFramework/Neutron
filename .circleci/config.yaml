@@ -1,0 +1,160 @@
+version: 2.1
+
+executors:
+  windows:
+    machine:
+      image: windows-default
+    shell: powershell.exe
+  linux:
+    docker:
+      - image: circleci/dotnet:8.0
+
+jobs:
+  build-and-package:
+    parameters:
+      os:
+        type: string
+        default: "linux"
+    executor: << parameters.os >>
+    steps:
+      - checkout
+      - run:
+          name: Setup .NET
+          command: |
+            dotnet --version
+            dotnet --list-sdks
+      - run:
+          name: Get version from tag
+          command: |
+            VERSION=$(echo $CIRCLE_TAG | sed 's/v//')
+            echo "VERSION=$VERSION" >> $BASH_ENV
+      - run:
+          name: Publish neutroncli
+          command: |
+            dotnet publish ./neutroncli/neutroncli.csproj --configuration Release --runtime $(uname -s | tr '[:upper:]' '[:lower:]')-x64 --self-contained true --output ./publish
+
+  create_choco_package:
+    executor: windows
+    steps:
+      - checkout
+      - run:
+          name: Create Chocolatey package
+          command: |
+            # Create Chocolatey package structure
+            mkdir -p ./choco/tools
+            Copy-Item ./publish/* ./choco/tools -Recurse
+
+            # Create Chocolatey nuspec file
+            $nuspec = @"
+            <?xml version="1.0" encoding="utf-8"?>
+            <package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
+              <metadata>
+                <id>neutroncli</id>
+                <version>${ENV:VERSION}</version>
+                <title>neutroncli</title>
+                <authors>AnnasVirtual</authors>
+                <projectUrl>https://github.com/annasajkh/Neutron</projectUrl>
+                <tags>cli dotnet webview</tags>
+                <description>Build apps with C# and web technologies using webview</description>
+              </metadata>
+            </package>
+            "@
+            $nuspec | Out-File -Encoding utf8 ./choco/neutroncli.nuspec
+
+            # Create Chocolatey installation script
+            $installScript = @"
+            `$toolsDir   = "`$(Split-Path -parent `$MyInvocation.MyCommand.Definition)"
+            `$fileLocation = Join-Path `$toolsDir 'neutroncli.exe'
+            
+            Install-BinFile -Name 'neutroncli' -Path `$fileLocation
+            "@
+            $installScript | Out-File -Encoding utf8 ./choco/tools/chocolateyinstall.ps1
+
+            # Pack and Push Chocolatey package
+            choco pack ./choco/neutroncli.nuspec --outputdirectory ./choco
+            choco push ./choco/neutroncli.${ENV:VERSION}.nupkg --source https://push.chocolatey.org/ --api-key $ENV:CHOCO_API_KEY
+
+  create_linux_packages:
+    executor: linux
+    steps:
+      - checkout
+      - run:
+          name: Create DEB package
+          command: |
+            mkdir -p ./deb_package/DEBIAN
+            mkdir -p ./deb_package/usr/local/bin
+            cp ./publish/neutroncli ./deb_package/usr/local/bin/
+            echo "Package: neutroncli
+            Version: $VERSION
+            Section: utils
+            Priority: optional
+            Architecture: amd64
+            Maintainer: AnnasVirtual
+            Description: Build apps with C# and web technologies using webview
+            " > ./deb_package/DEBIAN/control
+            dpkg-deb --build ./deb_package ./publish/neutroncli_${VERSION}_amd64.deb
+      - run:
+          name: Create RPM package
+          command: |
+            mkdir -p ./rpm_package/BUILD ./rpm_package/RPMS ./rpm_package/SOURCES ./rpm_package/SPECS
+            cp ./publish/neutroncli ./rpm_package/SOURCES/
+            echo "Name: neutroncli
+            Version: $VERSION
+            Release: 1
+            Summary: Build apps with C# and web technologies using webview
+            License: MIT
+            
+            %description
+            neutroncli is a tool to build apps with C# and web technologies using webview.
+            
+            %files
+            /usr/local/bin/neutroncli
+            
+            %install
+            mkdir -p %{buildroot}/usr/local/bin
+            cp %{_sourcedir}/neutroncli %{buildroot}/usr/local/bin/
+            " > ./rpm_package/SPECS/neutroncli.spec
+            rpmbuild -bb ./rpm_package/SPECS/neutroncli.spec --define "_topdir `pwd`/rpm_package"
+            cp ./rpm_package/RPMS/x86_64/neutroncli-${VERSION}-1.x86_64.rpm ./publish
+
+  create-release:
+    executor: linux
+    steps:
+      - checkout
+      - run:
+          name: Create GitHub Release and upload DEB/RPM
+          command: |
+            release_output=$(gh release create $CIRCLE_TAG --title "Release $CIRCLE_TAG" --generate-notes)
+            for file in ./publish/*; do
+              if [[ "$file" == *.rpm || "$file" == *.deb ]]; then
+                gh release upload $CIRCLE_TAG "$file" --clobber
+              fi
+            done
+
+workflows:
+  version: 2
+  build_and_release:
+    jobs:
+      - build-and-package:
+          matrix:
+            parameters:
+              os: ["linux", "windows"]
+      - create_choco_package:
+          requires:
+            - build-and-package
+          filters:
+            tags:
+              only: /^v.*/
+      - create_linux_packages:
+          requires:
+            - build-and-package
+          filters:
+            tags:
+              only: /^v.*/
+      - create-release:
+          requires:
+            - create_choco_package
+            - create_linux_packages
+          filters:
+            tags:
+              only: /^v.*/
