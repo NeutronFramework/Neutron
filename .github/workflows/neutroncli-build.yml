@@ -33,44 +33,44 @@ jobs:
     - name: Publish
       run: dotnet publish ./neutroncli/neutroncli.csproj --configuration Release --runtime ${{ matrix.platform }}-${{ matrix.arch }} --self-contained true --output ./publish
 
-    # - name: Create Chocolatey package
-    #   if: matrix.os == 'windows-latest'
-    #   env:
-    #     CHOCO_API_KEY: ${{ secrets.CHOCO_API_KEY }}
-    #   run: |
-    #     # Create Chocolatey package structure
-    #     mkdir -p ./choco/tools
-    #     Copy-Item ./publish/* ./choco/tools -Recurse
+    - name: Create Chocolatey package
+      if: matrix.os == 'windows-latest'
+      env:
+        CHOCO_API_KEY: ${{ secrets.CHOCO_API_KEY }}
+      run: |
+        # Create Chocolatey package structure
+        mkdir -p ./choco/tools
+        Copy-Item ./publish/* ./choco/tools -Recurse
 
-    #     # Create Chocolatey nuspec file
-    #     $nuspec = @"
-    #     <?xml version="1.0" encoding="utf-8"?>
-    #     <package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
-    #       <metadata>
-    #         <id>neutroncli</id>
-    #         <version>${{ steps.get_version.outputs.VERSION }}</version>
-    #         <title>neutroncli</title>
-    #         <authors>AnnasVirtual</authors>
-    #         <projectUrl>https://github.com/annasajkh/Neutron</projectUrl>
-    #         <tags>cli dotnet webview</tags>
-    #         <description>Build apps with C# and web technologies using webview</description>
-    #       </metadata>
-    #     </package>
-    #     "@
-    #     $nuspec | Out-File -Encoding utf8 ./choco/neutroncli.nuspec
+        # Create Chocolatey nuspec file
+        $nuspec = @"
+        <?xml version="1.0" encoding="utf-8"?>
+        <package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
+          <metadata>
+            <id>neutroncli</id>
+            <version>${{ steps.get_version.outputs.VERSION }}</version>
+            <title>neutroncli</title>
+            <authors>AnnasVirtual</authors>
+            <projectUrl>https://github.com/annasajkh/Neutron</projectUrl>
+            <tags>cli dotnet webview</tags>
+            <description>Build apps with C# and web technologies using webview</description>
+          </metadata>
+        </package>
+        "@
+        $nuspec | Out-File -Encoding utf8 ./choco/neutroncli.nuspec
 
-    #     # Create Chocolatey installation script
-    #     $installScript = @"
-    #     `$toolsDir   = "`$(Split-Path -parent `$MyInvocation.MyCommand.Definition)"
-    #     `$fileLocation = Join-Path `$toolsDir 'neutroncli.exe'
+        # Create Chocolatey installation script
+        $installScript = @"
+        `$toolsDir   = "`$(Split-Path -parent `$MyInvocation.MyCommand.Definition)"
+        `$fileLocation = Join-Path `$toolsDir 'neutroncli.exe'
         
-    #     Install-BinFile -Name 'neutroncli' -Path `$fileLocation
-    #     "@
-    #     $installScript | Out-File -Encoding utf8 ./choco/tools/chocolateyinstall.ps1
+        Install-BinFile -Name 'neutroncli' -Path `$fileLocation
+        "@
+        $installScript | Out-File -Encoding utf8 ./choco/tools/chocolateyinstall.ps1
 
-    #     # Pack and Push Chocolatey package
-    #     choco pack ./choco/neutroncli.nuspec --outputdirectory ./choco
-    #     choco push ./choco/neutroncli.${{ steps.get_version.outputs.VERSION }}.nupkg --source https://push.chocolatey.org/ --api-key $env:CHOCO_API_KEY
+        # Pack and Push Chocolatey package
+        choco pack ./choco/neutroncli.nuspec --outputdirectory ./choco
+        choco push ./choco/neutroncli.${{ steps.get_version.outputs.VERSION }}.nupkg --source https://push.chocolatey.org/ --api-key $env:CHOCO_API_KEY
 
     - name: Create Linux packages
       if: matrix.os == 'ubuntu-latest'
