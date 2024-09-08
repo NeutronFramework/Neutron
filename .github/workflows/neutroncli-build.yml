@@ -130,15 +130,26 @@ jobs:
     needs: build-and-package
     runs-on: ubuntu-latest
     steps:
+    - name: Get the release information
+      id: get_release
+      uses: octokit/request-action@v2
+      with:
+        route: GET /repos/{owner}/{repo}/releases/tags/{tag}
+        owner: ${{ github.repository_owner }}
+        repo: ${{ github.repository }}
+        tag: ${{ github.ref }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
     - name: Download Linux packages
       uses: actions/download-artifact@v3
       with:
         name: linux-packages
 
-    - name: Upload DEB and RPM to GitHub Release
+    - name: Upload DEB to GitHub Release
       uses: actions/upload-release-asset@v1
       with:
-        upload_url: ${{ github.event.release.upload_url }}
+        upload_url: ${{ steps.get_release.outputs.upload_url }}
         asset_path: ./linux_packages/neutroncli_${{ steps.get_version.outputs.VERSION }}_amd64.deb
         asset_name: neutroncli_${{ steps.get_version.outputs.VERSION }}_amd64.deb
         asset_content_type: application/x-debian-package
@@ -146,7 +157,7 @@ jobs:
     - name: Upload RPM to GitHub Release
       uses: actions/upload-release-asset@v1
       with:
-        upload_url: ${{ github.event.release.upload_url }}
+        upload_url: ${{ steps.get_release.outputs.upload_url }}
         asset_path: ./linux_packages/neutroncli-${{ steps.get_version.outputs.VERSION }}-1.x86_64.rpm
         asset_name: neutroncli-${{ steps.get_version.outputs.VERSION }}-1.x86_64.rpm
         asset_content_type: application/x-rpm
