@@ -126,7 +126,6 @@ jobs:
         name: linux-packages
         path: ./linux_packages/*
 
-
   release:
     needs: build-and-package
     runs-on: ubuntu-latest
