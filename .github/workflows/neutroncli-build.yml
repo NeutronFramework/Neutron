@@ -75,9 +75,6 @@ jobs:
     - name: Create Linux packages
       if: matrix.os == 'ubuntu-latest'
       run: |
-        # Create directory for packages
-        mkdir -p ./linux_packages
-
         # Create DEB package
         mkdir -p ./deb_package/DEBIAN
         mkdir -p ./deb_package/usr/local/bin
@@ -90,7 +87,7 @@ jobs:
         Maintainer: AnnasVirtual
         Description: Build apps with C# and web technologies using webview
         " > ./deb_package/DEBIAN/control
-        dpkg-deb --build ./deb_package ./linux_packages/neutroncli_${{ steps.get_version.outputs.VERSION }}_amd64.deb
+        dpkg-deb --build ./deb_package ./publish/neutroncli_${{ steps.get_version.outputs.VERSION }}_amd64.deb
 
         # Create RPM package
         mkdir -p ./rpm_package/BUILD ./rpm_package/RPMS ./rpm_package/SOURCES ./rpm_package/SPECS
@@ -112,56 +109,30 @@ jobs:
         cp %{_sourcedir}/neutroncli %{buildroot}/usr/local/bin/
         " > ./rpm_package/SPECS/neutroncli.spec
         rpmbuild -bb ./rpm_package/SPECS/neutroncli.spec --define "_topdir `pwd`/rpm_package"
-        cp ./rpm_package/RPMS/x86_64/neutroncli-${{ steps.get_version.outputs.VERSION }}-1.x86_64.rpm ./linux_packages/
-
-    - name: Upload Linux artifacts
-      if: matrix.os == 'ubuntu-latest'
-      uses: actions/upload-artifact@v3
-      with:
-        name: linux-packages
-        path: ./linux_packages/*
+        cp ./rpm_package/RPMS/x86_64/neutroncli-${{ steps.get_version.outputs.VERSION }}-1.x86_64.rpm ./publish
 
   create-release:
-    needs: build-and-package
+    needs: build
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && contains(github.ref, 'refs/tags/')
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
-    
     - name: Download artifacts
       uses: actions/download-artifact@v3
-      with:
-        name: linux-packages
-
-    - name: List files in linux_packages
-      run: |
-        echo "Listing files in linux_packages directory..."
-        ls -l ./linux_packages/
-
-    - name: Validate artifacts
-      run: |
-        echo "Validating files..."
-        for file in ./linux_packages/*.{deb,rpm}; do
-          if [ -f "$file" ]; then
-            echo "$file exists and is a valid file"
-          else
-            echo "Error: $file does not exist or is not a valid file"
-            exit 1
-          fi
-        done
-    
     - name: Create Release
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        assets=""
-        for file in ./linux_packages/*.{deb,rpm}; do
-          if [ -f "$file" ]; then
-            assets="$assets $file"
+        # Create the release
+        release_output=$(gh release create ${{ github.ref_name }} --title "Release ${{ github.ref_name }}" --generate-notes)
+        echo "Release created: $release_output"
+        
+        # Upload only deb and rpm files to the release
+        for file in ./*/*; do
+          if [[ -f "$file" && ($file == *.rpm || $file == *.deb) ]]; then
+            echo "Uploading $file to release..."
+            gh release upload ${{ github.ref_name }} "$file" --clobber
           fi
         done
-        gh release create ${{ github.ref_name }} \
-          --title "Release ${{ github.ref_name }}" \
-          --generate-notes \
-          $assets
+      shell: bash
