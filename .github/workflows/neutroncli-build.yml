@@ -134,8 +134,10 @@ jobs:
       with:
         name: linux-packages
 
-    - name: List files
-      run: ls -R
+    - name: List files in linux_packages
+      run: |
+        echo "Listing files in linux_packages directory..."
+        ls -l ./linux_packages/
 
     - name: Validate artifacts
       run: |
