@@ -2,8 +2,8 @@ version: 2.1
 
 executors:
   windows:
-    machine:
-      image: windows-default
+    windows:
+      version: '2022'
     shell: powershell.exe
   linux:
     docker:
@@ -34,7 +34,7 @@ jobs:
             dotnet publish ./neutroncli/neutroncli.csproj --configuration Release --runtime $(uname -s | tr '[:upper:]' '[:lower:]')-x64 --self-contained true --output ./publish
 
   create_choco_package:
-    executor: windows
+    executor: windows  # Use Windows executor here
     steps:
       - checkout
       - run:
