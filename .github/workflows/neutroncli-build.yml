@@ -63,21 +63,26 @@ jobs:
           exit 1
         }
         
+        # Download EnvVarUpdate.nsh
+        Invoke-WebRequest -Uri "https://nsis.sourceforge.io/mediawiki/images/7/7f/EnvVarUpdate.7z" -OutFile "EnvVarUpdate.7z"
+        7z e EnvVarUpdate.7z -o"C:\Program Files (x86)\NSIS\Include" EnvVarUpdate.nsh
+        
         # Create NSIS script (installer.nsi)
         $nsisScript = @'
         !include "MUI2.nsh"
+        !include "EnvVarUpdate.nsh"
         Name "neutroncli"
         OutFile "neutroncli-installer-${{ matrix.platform }}-${{ matrix.arch }}.exe"
         InstallDir "$PROGRAMFILES64\neutroncli"
         !define MUI_ICON "$%TEMP%\icon.ico"
         !define MUI_UNICON "$%TEMP%\icon.ico"
 
-        VIProductVersion "0.1.8.0"
+        VIProductVersion "0.1.9.0"
         VIAddVersionKey "ProductName" "neutroncli"
         VIAddVersionKey "FileDescription" "Build apps with C# and web technologies using webview"
         VIAddVersionKey "LegalCopyright" "AnnasVirtual"
-        VIAddVersionKey "FileVersion" "0.1.8.0"
-        VIAddVersionKey "ProductVersion" "0.1.8.0"
+        VIAddVersionKey "FileVersion" "0.1.9.0"
+        VIAddVersionKey "ProductVersion" "0.1.9.0"
         VIAddVersionKey "CompanyName" "AnnasVirtual"
 
         !insertmacro MUI_PAGE_WELCOME
@@ -94,34 +99,32 @@ jobs:
           SetOutPath $INSTDIR
           File /r "publish\*.*"
           
+          CreateDirectory "$SMPROGRAMS\neutroncli"
           CreateShortcut "$SMPROGRAMS\neutroncli\neutroncli.lnk" "$INSTDIR\neutroncli.exe" "" "$INSTDIR\icon.ico"
 
-          WriteRegExpandStr HKLM "SYSTEM\CurrentControlSet\Control\Session Manager\Environment" "Path" "$INSTDIR;$%PATH%"
+          ${EnvVarUpdate} $0 "PATH" "A" "HKLM" "$INSTDIR"
           WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\neutroncli" "DisplayName" "neutroncli"
           WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\neutroncli" "UninstallString" "$INSTDIR\Uninstall.exe"
           WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\neutroncli" "DisplayIcon" "$INSTDIR\icon.ico"
           WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\neutroncli" "Publisher" "AnnasVirtual"
           WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\neutroncli" "URLInfoAbout" "https://github.com/annasajkh/Neutron"
-          WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\neutroncli" "DisplayVersion" "0.1.8.0"
+          WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\neutroncli" "DisplayVersion" "0.1.9.0"
           WriteUninstaller "$INSTDIR\Uninstall.exe"
         SectionEnd
 
         Section "Uninstall"
           Delete "$SMPROGRAMS\neutroncli\neutroncli.lnk"
-          Delete "$DESKTOP\neutroncli.lnk"
+
           RMDir /r "$INSTDIR"
           DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\neutroncli"
 
-          # Remove neutroncli from PATH
-          ReadRegStr $R0 HKLM "SYSTEM\CurrentControlSet\Control\Session Manager\Environment" "Path"
-          StrReplace $R1 "$R0" "$INSTDIR;" ""
-          WriteRegStr HKLM "SYSTEM\CurrentControlSet\Control\Session Manager\Environment" "Path" "$R1"
+          ${un.EnvVarUpdate} $0 "PATH" "R" "HKLM" "$INSTDIR"
         SectionEnd
         '@
         $nsisScript | Out-File -Encoding ASCII installer.nsi
         
         # Build installer
-        & "C:\Program Files (x86)\NSIS\makensis.exe" installer.nsi
+        & "C:\Program Files (x86)\NSIS\makensis.exe" /DINCLUDE_DIR="C:\Program Files (x86)\NSIS\Include" installer.nsi
         
         if (-not (Test-Path "neutroncli-installer-${{ matrix.platform }}-${{ matrix.arch }}.exe")) {
           Write-Error "Installer creation failed"
@@ -143,7 +146,6 @@ jobs:
       with:
         name: installer-${{ matrix.platform }}-${{ matrix.arch }}
         path: ./neutroncli-installer-${{ matrix.platform }}-${{ matrix.arch }}.exe
-
 
   create-release:
     needs: build
