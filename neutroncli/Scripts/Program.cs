@@ -11,7 +11,7 @@ using Command = System.CommandLine.Command;
 
 namespace NeutronCli.Scripts;
 
-class Program
+static class Program
 {
     static async Task<int> Main(string[] args)
     {
