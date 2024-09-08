@@ -1,21 +1,13 @@
 version: 2.1
 
 executors:
-  windows:
-    windows:
-      version: '2022'
-    shell: powershell.exe
   linux:
     docker:
       - image: circleci/dotnet:8.0
 
 jobs:
-  build-and-package:
-    parameters:
-      os:
-        type: string
-        default: "linux"
-    executor: << parameters.os >>
+  build-and-package-linux:
+    executor: linux
     steps:
       - checkout
       - run:
@@ -31,20 +23,33 @@ jobs:
       - run:
           name: Publish neutroncli
           command: |
-            dotnet publish ./neutroncli/neutroncli.csproj --configuration Release --runtime $(uname -s | tr '[:upper:]' '[:lower:]')-x64 --self-contained true --output ./publish
+            dotnet publish ./neutroncli/neutroncli.csproj --configuration Release --runtime linux-x64 --self-contained true --output ./publish
 
-  create_choco_package:
-    executor: windows  # Use Windows executor here
+  build-and-package-windows:
+    machine:
+      image: windows-default
     steps:
       - checkout
       - run:
+          name: Setup .NET
+          command: |
+            dotnet --version
+            dotnet --list-sdks
+      - run:
+          name: Get version from tag
+          command: |
+            echo "VERSION=$(echo $CIRCLE_TAG | sed 's/v//')" >> $BASH_ENV
+      - run:
+          name: Publish neutroncli
+          command: |
+            dotnet publish ./neutroncli/neutroncli.csproj --configuration Release --runtime win-x64 --self-contained true --output ./publish
+
+      - run:
           name: Create Chocolatey package
           command: |
-            # Create Chocolatey package structure
             mkdir -p ./choco/tools
             Copy-Item ./publish/* ./choco/tools -Recurse
 
-            # Create Chocolatey nuspec file
             $nuspec = @"
             <?xml version="1.0" encoding="utf-8"?>
             <package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
@@ -61,7 +66,6 @@ jobs:
             "@
             $nuspec | Out-File -Encoding utf8 ./choco/neutroncli.nuspec
 
-            # Create Chocolatey installation script
             $installScript = @"
             `$toolsDir   = "`$(Split-Path -parent `$MyInvocation.MyCommand.Definition)"
             `$fileLocation = Join-Path `$toolsDir 'neutroncli.exe'
@@ -70,7 +74,6 @@ jobs:
             "@
             $installScript | Out-File -Encoding utf8 ./choco/tools/chocolateyinstall.ps1
 
-            # Pack and Push Chocolatey package
             choco pack ./choco/neutroncli.nuspec --outputdirectory ./choco
             choco push ./choco/neutroncli.${ENV:VERSION}.nupkg --source https://push.chocolatey.org/ --api-key $ENV:CHOCO_API_KEY
 
@@ -135,26 +138,24 @@ workflows:
   version: 2
   build_and_release:
     jobs:
-      - build-and-package:
-          matrix:
-            parameters:
-              os: ["linux", "windows"]
-      - create_choco_package:
-          requires:
-            - build-and-package
+      - build-and-package-linux:
+          filters:
+            tags:
+              only: /^v.*/
+      - build-and-package-windows:
           filters:
             tags:
               only: /^v.*/
       - create_linux_packages:
           requires:
-            - build-and-package
+            - build-and-package-linux
           filters:
             tags:
               only: /^v.*/
       - create-release:
           requires:
-            - create_choco_package
-            - create_linux_packages
+            - build-and-package-linux
+            - build-and-package-windows
           filters:
             tags:
               only: /^v.*/
