@@ -72,12 +72,10 @@ class Program
             string frontendName = $"{string.Join("-", frontendNameParts).ToLower()}-frontend";
             frontendName = Regex.Replace(frontendName, "-{2,}", "-");
 
-            Directory.CreateDirectory(Path.Combine(projectName, frontendName));
+            Console.WriteLine($"Calling npm create vite@latest {frontendName} -- --template {frontendFramework.ToString()!.Replace("_", "-")}");
 
-            Console.WriteLine("Calling npm create with vite");
-
-            await Cli.Wrap("npm").WithArguments($"create vite@latest . -- --template {frontendFramework.ToString()!.Replace("_", "-")} .")
-                                 .WithWorkingDirectory(Path.Combine(projectName, frontendName))
+            await Cli.Wrap("npm").WithArguments($"create vite@latest {frontendName} -- --template {frontendFramework.ToString()!.Replace("_", "-")}")
+                                 .WithWorkingDirectory(Path.Combine(projectName))
                                  .WithStandardOutputPipe(PipeTarget.ToDelegate(Console.WriteLine))
                                  .ExecuteBufferedAsync();
 

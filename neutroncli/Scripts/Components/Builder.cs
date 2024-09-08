@@ -110,6 +110,7 @@ public static class Builder
         CopyAdditionalLibs(projectConfig, targetPlatform, buildMode);
 
         Console.WriteLine("Running dotnet run");
+
         await Cli.Wrap("dotnet").WithArguments("run")
                  .WithWorkingDirectory(projectConfig.BackendName)
                  .WithStandardOutputPipe(PipeTarget.ToDelegate(Console.WriteLine))
