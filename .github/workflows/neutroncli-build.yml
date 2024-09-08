@@ -121,7 +121,7 @@ jobs:
         path: ./linux_packages/*
 
 
-  publish-linux-packages:
+  release:
     needs: build-and-package
     runs-on: ubuntu-latest
     steps:
@@ -130,24 +130,18 @@ jobs:
       with:
         name: linux-packages
 
-    - name: Publish to PPA (for APT)
-      env:
-        PPA_REPO: ${{ secrets.PPA_REPO }}
-        GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
-      run: |
-        # Import GPG key
-        echo "$GPG_PRIVATE_KEY" | gpg --import
-        # Sign the package
-        dpkg-sig --sign builder *.deb
-        # Upload to PPA (this is a simplified example)
-        dput ppa:$PPA_REPO *.changes
+    - name: Upload DEB and RPM to GitHub Release
+      uses: actions/upload-release-asset@v1
+      with:
+        upload_url: ${{ github.event.release.upload_url }}
+        asset_path: ./linux_packages/neutroncli_${{ steps.get_version.outputs.VERSION }}_amd64.deb
+        asset_name: neutroncli_${{ steps.get_version.outputs.VERSION }}_amd64.deb
+        asset_content_type: application/x-debian-package
 
-    - name: Publish to COPR (for DNF)
-      env:
-        COPR_CONFIG: ${{ secrets.COPR_CONFIG }}
-      run: |
-        # Setup COPR configuration
-        mkdir -p ~/.config
-        echo "$COPR_CONFIG" > ~/.config/copr
-        # Submit build to COPR
-        copr-cli build your-copr-repo *.rpm
+    - name: Upload RPM to GitHub Release
+      uses: actions/upload-release-asset@v1
+      with:
+        upload_url: ${{ github.event.release.upload_url }}
+        asset_path: ./linux_packages/neutroncli-${{ steps.get_version.outputs.VERSION }}-1.x86_64.rpm
+        asset_name: neutroncli-${{ steps.get_version.outputs.VERSION }}-1.x86_64.rpm
+        asset_content_type: application/x-rpm
