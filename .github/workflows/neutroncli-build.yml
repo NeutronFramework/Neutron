@@ -1,15 +1,12 @@
-name: Publish neutroncli
+name: Build, Package, and Publish neutroncli
+
 on:
   push:
-    branches: [ "main" ]
     tags:
       - "v*"
-  pull_request:
-    branches: [ "main" ]
-permissions:
-  contents: write
+
 jobs:
-  build:
+  build-and-package:
     strategy:
       matrix:
         include:
@@ -27,148 +24,130 @@ jobs:
       with:
         dotnet-version: 8.0.x
     
-    - name: Cache .NET dependencies
-      uses: actions/cache@v3
-      with:
-        path: ~/.nuget/packages
-        key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
-        restore-keys: |
-          ${{ runner.os }}-nuget-
+    - name: Get version from tag
+      id: get_version
+      run: echo ::set-output name=VERSION::${GITHUB_REF#refs/tags/v}
+      shell: bash
     
     - name: Publish
       run: dotnet publish ./neutroncli/neutroncli.csproj --configuration Release --runtime ${{ matrix.platform }}-${{ matrix.arch }} --self-contained true --output ./publish
-    
-    - name: Create portable artifact
-      run: |
-        if ("${{ matrix.os }}" -eq "windows-latest") {
-          Compress-Archive -Path ./publish/* -DestinationPath ./neutroncli-portable-${{ matrix.platform }}-${{ matrix.arch }}.zip
-        } else {
-          zip -r ./neutroncli-portable-${{ matrix.platform }}-${{ matrix.arch }}.zip ./publish
-        }
-      shell: pwsh
-    
-    - name: Copy icon file
+
+    - name: Create and Publish Chocolatey package
       if: matrix.os == 'windows-latest'
-      run: |
-        Copy-Item "./publish/icon.ico" -Destination "$env:TEMP\icon.ico"
-      shell: pwsh
-    
-    - name: Create NSIS installer (Windows)
-      if: matrix.os == 'windows-latest'
-      run: |
-        # Install NSIS
-        choco install nsis -y
-        if (-not (Test-Path "C:\Program Files (x86)\NSIS\makensis.exe")) {
-          Write-Error "NSIS installation failed"
-          exit 1
-        }
-        
-        # Download EnvVarUpdate.nsh
-        Invoke-WebRequest -Uri "https://nsis.sourceforge.io/mediawiki/images/7/7f/EnvVarUpdate.7z" -OutFile "EnvVarUpdate.7z"
-        7z e EnvVarUpdate.7z -o"C:\Program Files (x86)\NSIS\Include" EnvVarUpdate.nsh
-        
-        # Create NSIS script (installer.nsi)
-        $nsisScript = @'
-        !include "MUI2.nsh"
-        !include "EnvVarUpdate.nsh"
-        Name "neutroncli"
-        OutFile "neutroncli-installer-${{ matrix.platform }}-${{ matrix.arch }}.exe"
-        InstallDir "$PROGRAMFILES64\neutroncli"
-        !define MUI_ICON "$%TEMP%\icon.ico"
-        !define MUI_UNICON "$%TEMP%\icon.ico"
-
-        VIProductVersion "0.1.9.0"
-        VIAddVersionKey "ProductName" "neutroncli"
-        VIAddVersionKey "FileDescription" "Build apps with C# and web technologies using webview"
-        VIAddVersionKey "LegalCopyright" "AnnasVirtual"
-        VIAddVersionKey "FileVersion" "0.1.9.0"
-        VIAddVersionKey "ProductVersion" "0.1.9.0"
-        VIAddVersionKey "CompanyName" "AnnasVirtual"
-
-        !insertmacro MUI_PAGE_WELCOME
-        !insertmacro MUI_PAGE_DIRECTORY
-        !insertmacro MUI_PAGE_INSTFILES
-        !insertmacro MUI_PAGE_FINISH
-        !insertmacro MUI_UNPAGE_WELCOME
-        !insertmacro MUI_UNPAGE_CONFIRM
-        !insertmacro MUI_UNPAGE_INSTFILES
-        !insertmacro MUI_UNPAGE_FINISH
-        !insertmacro MUI_LANGUAGE "English"
-
-        Section
-          SetOutPath $INSTDIR
-          File /r "publish\*.*"
-          
-          CreateDirectory "$SMPROGRAMS\neutroncli"
-          CreateShortcut "$SMPROGRAMS\neutroncli\neutroncli.lnk" "$INSTDIR\neutroncli.exe" "" "$INSTDIR\icon.ico"
-
-          ${EnvVarUpdate} $0 "PATH" "A" "HKLM" "$INSTDIR"
-          WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\neutroncli" "DisplayName" "neutroncli"
-          WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\neutroncli" "UninstallString" "$INSTDIR\Uninstall.exe"
-          WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\neutroncli" "DisplayIcon" "$INSTDIR\icon.ico"
-          WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\neutroncli" "Publisher" "AnnasVirtual"
-          WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\neutroncli" "URLInfoAbout" "https://github.com/annasajkh/Neutron"
-          WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\neutroncli" "DisplayVersion" "0.1.9.0"
-          WriteUninstaller "$INSTDIR\Uninstall.exe"
-        SectionEnd
-
-        Section "Uninstall"
-          Delete "$SMPROGRAMS\neutroncli\neutroncli.lnk"
-
-          RMDir /r "$INSTDIR"
-          DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\neutroncli"
-
-          ${un.EnvVarUpdate} $0 "PATH" "R" "HKLM" "$INSTDIR"
-        SectionEnd
-        '@
-        $nsisScript | Out-File -Encoding ASCII installer.nsi
-        
-        # Build installer
-        & "C:\Program Files (x86)\NSIS\makensis.exe" /DINCLUDE_DIR="C:\Program Files (x86)\NSIS\Include" installer.nsi
-        
-        if (-not (Test-Path "neutroncli-installer-${{ matrix.platform }}-${{ matrix.arch }}.exe")) {
-          Write-Error "Installer creation failed"
-          exit 1
-        }
-        
-        Write-Output "Installer created successfully"
-      shell: pwsh
-      
-    - name: Upload portable artifact
-      uses: actions/upload-artifact@v3
-      with:
-        name: portable-${{ matrix.platform }}-${{ matrix.arch }}
-        path: ./neutroncli-portable-${{ matrix.platform }}-${{ matrix.arch }}.zip
-    
-    - name: Upload installer artifact (Windows)
-      if: matrix.os == 'windows-latest'
-      uses: actions/upload-artifact@v3
-      with:
-        name: installer-${{ matrix.platform }}-${{ matrix.arch }}
-        path: ./neutroncli-installer-${{ matrix.platform }}-${{ matrix.arch }}.exe
-
-  create-release:
-    needs: build
-    runs-on: ubuntu-latest
-    if: github.event_name == 'push' && contains(github.ref, 'refs/tags/')
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
-    - name: Download artifacts
-      uses: actions/download-artifact@v3
-    - name: Create Release
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        CHOCO_API_KEY: ${{ secrets.CHOCO_API_KEY }}
       run: |
-        # Create the release
-        release_output=$(gh release create ${{ github.ref_name }} --title "Release ${{ github.ref_name }}" --generate-notes)
-        echo "Release created: $release_output"
+        # Create Chocolatey package structure
+        mkdir -p ./choco/tools
+        Copy-Item ./publish/* ./choco/tools -Recurse
         
-        # Upload only zip and exe files to the release
-        for file in ./*/*; do
-          if [[ -f "$file" && ($file == *.zip || $file == *.exe) ]]; then
-            echo "Uploading $file to release..."
-            gh release upload ${{ github.ref_name }} "$file" --clobber
-          fi
-        done
-      shell: bash
+        # Create Chocolatey nuspec file
+        $nuspec = @"
+        <?xml version="1.0" encoding="utf-8"?>
+        <package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
+          <metadata>
+            <id>neutroncli</id>
+            <version>${{ steps.get_version.outputs.VERSION }}</version>
+            <title>neutroncli</title>
+            <authors>AnnasVirtual</authors>
+            <projectUrl>https://github.com/annasajkh/Neutron</projectUrl>
+            <tags>cli dotnet webview</tags>
+            <description>Build apps with C# and web technologies using webview</description>
+          </metadata>
+        </package>
+        "@
+        $nuspec | Out-File -Encoding utf8 ./choco/neutroncli.nuspec
+
+        # Create Chocolatey installation script
+        $installScript = @"
+        `$toolsDir   = "`$(Split-Path -parent `$MyInvocation.MyCommand.Definition)"
+        `$fileLocation = Join-Path `$toolsDir 'neutroncli.exe'
+        
+        Install-BinFile -Name 'neutroncli' -Path `$fileLocation
+        "@
+        $installScript | Out-File -Encoding utf8 ./choco/tools/chocolateyinstall.ps1
+
+        # Pack and Push Chocolatey package
+        choco pack ./choco/neutroncli.nuspec --outputdirectory ./choco
+        choco push ./choco/neutroncli.${{ steps.get_version.outputs.VERSION }}.nupkg --source https://push.chocolatey.org/ --api-key $env:CHOCO_API_KEY
+
+    - name: Create Linux packages
+      if: matrix.os == 'ubuntu-latest'
+      run: |
+        # Create directory for packages
+        mkdir -p ./linux_packages
+
+        # Create DEB package
+        mkdir -p ./deb_package/DEBIAN
+        mkdir -p ./deb_package/usr/local/bin
+        cp ./publish/neutroncli ./deb_package/usr/local/bin/
+        echo "Package: neutroncli
+        Version: ${{ steps.get_version.outputs.VERSION }}
+        Section: utils
+        Priority: optional
+        Architecture: amd64
+        Maintainer: AnnasVirtual
+        Description: Build apps with C# and web technologies using webview
+        " > ./deb_package/DEBIAN/control
+        dpkg-deb --build ./deb_package ./linux_packages/neutroncli_${{ steps.get_version.outputs.VERSION }}_amd64.deb
+
+        # Create RPM package
+        mkdir -p ./rpm_package/BUILD ./rpm_package/RPMS ./rpm_package/SOURCES ./rpm_package/SPECS
+        cp ./publish/neutroncli ./rpm_package/SOURCES/
+        echo "Name: neutroncli
+        Version: ${{ steps.get_version.outputs.VERSION }}
+        Release: 1
+        Summary: Build apps with C# and web technologies using webview
+        License: MIT
+        
+        %description
+        neutroncli is a tool to build apps with C# and web technologies using webview.
+        
+        %files
+        /usr/local/bin/neutroncli
+        
+        %install
+        mkdir -p %{buildroot}/usr/local/bin
+        cp %{_sourcedir}/neutroncli %{buildroot}/usr/local/bin/
+        " > ./rpm_package/SPECS/neutroncli.spec
+        rpmbuild -bb ./rpm_package/SPECS/neutroncli.spec --define "_topdir `pwd`/rpm_package"
+        cp ./rpm_package/RPMS/x86_64/neutroncli-${{ steps.get_version.outputs.VERSION }}-1.x86_64.rpm ./linux_packages/
+
+    - name: Upload Linux artifacts
+      if: matrix.os == 'ubuntu-latest'
+      uses: actions/upload-artifact@v3
+      with:
+        name: linux-packages
+        path: ./linux_packages/*
+
+
+  publish-linux-packages:
+    needs: build-and-package
+    runs-on: ubuntu-latest
+    steps:
+    - name: Download Linux packages
+      uses: actions/download-artifact@v3
+      with:
+        name: linux-packages
+
+    - name: Publish to PPA (for APT)
+      env:
+        PPA_REPO: ${{ secrets.PPA_REPO }}
+        GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+      run: |
+        # Import GPG key
+        echo "$GPG_PRIVATE_KEY" | gpg --import
+        # Sign the package
+        dpkg-sig --sign builder *.deb
+        # Upload to PPA (this is a simplified example)
+        dput ppa:$PPA_REPO *.changes
+
+    - name: Publish to COPR (for DNF)
+      env:
+        COPR_CONFIG: ${{ secrets.COPR_CONFIG }}
+      run: |
+        # Setup COPR configuration
+        mkdir -p ~/.config
+        echo "$COPR_CONFIG" > ~/.config/copr
+        # Submit build to COPR
+        copr-cli build your-copr-repo *.rpm
