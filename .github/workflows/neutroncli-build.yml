@@ -127,21 +127,28 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
+    
     - name: Download artifacts
       uses: actions/download-artifact@v3
+    
+    - name: Validate artifacts
+      run: |
+        for file in ./*/*.zip; do
+          if ! unzip -t "$file" > /dev/null; then
+            echo "Error: $file is not a valid zip file"
+            exit 1
+          fi
+        done
+    
     - name: Create Release
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        # Create the release
-        release_output=$(gh release create ${{ github.ref_name }} --title "Release ${{ github.ref_name }}" --generate-notes)
-        echo "Release created: $release_output"
-        
-        # Upload only zip and exe files to the release
-        for file in ./*/*; do
-          if [[ -f "$file" && ($file == *.zip || $file == *.exe) ]]; then
-            echo "Uploading $file to release..."
-            gh release upload ${{ github.ref_name }} "$file" --clobber
-          fi
+        assets=""
+        for file in ./*/*.zip; do
+          assets="$assets $file"
         done
-      shell: bash
+        gh release create ${{ github.ref_name }} \
+          --title "Release ${{ github.ref_name }}" \
+          --generate-notes \
+          $assets
