@@ -19,6 +19,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v3
+
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
@@ -130,12 +131,17 @@ jobs:
     
     - name: Download artifacts
       uses: actions/download-artifact@v3
-    
+      with:
+        name: linux-packages
+
+    - name: List downloaded artifacts
+      run: ls -R
+
     - name: Validate artifacts
       run: |
-        for file in ./*/*.zip; do
-          if ! unzip -t "$file" > /dev/null; then
-            echo "Error: $file is not a valid zip file"
+        for file in ./*/*.deb ./*/*.rpm; do
+          if ! [ -f "$file" ]; then
+            echo "Error: $file does not exist or is not a valid file"
             exit 1
           fi
         done
@@ -145,7 +151,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         assets=""
-        for file in ./*/*.zip; do
+        for file in ./*/*.deb ./*/*.rpm; do
           assets="$assets $file"
         done
         gh release create ${{ github.ref_name }} \
