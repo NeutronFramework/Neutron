@@ -118,13 +118,13 @@ jobs:
           ${If} $R0 != ""
             Push "$R0"
             Push "$INSTDIR;"
-            Call RemoveFromPath
+            Call un.RemoveFromPath
             Pop $R1
             WriteRegStr HKLM "SYSTEM\CurrentControlSet\Control\Session Manager\Environment" "Path" "$R1"
           ${EndIf}
         SectionEnd
 
-        Function RemoveFromPath
+        Function un.RemoveFromPath
           Exch $0  ; Path to remove
           Exch
           Exch $1  ; Full path string
@@ -145,7 +145,7 @@ jobs:
           done:
             Pop $0
         FunctionEnd
-
+        
         '@
         $nsisScript | Out-File -Encoding ASCII installer.nsi
         
