@@ -18,7 +18,6 @@ public class ProjectConfig
     }
 }
 
-
 [JsonSourceGenerationOptions(WriteIndented = true)]
 [JsonSerializable(typeof(ProjectConfig))]
 internal partial class SourceGenerationContext : JsonSerializerContext
