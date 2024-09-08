@@ -72,12 +72,12 @@ jobs:
         !define MUI_ICON "$%TEMP%\icon.ico"
         !define MUI_UNICON "$%TEMP%\icon.ico"
 
-        VIProductVersion "0.1.5.0"
+        VIProductVersion "0.1.6.0"
         VIAddVersionKey "ProductName" "neutroncli"
         VIAddVersionKey "FileDescription" "Build apps with c# and web technologies using webview"
         VIAddVersionKey "LegalCopyright" "AnnasVirtual"
-        VIAddVersionKey "FileVersion" "0.1.5.0"
-        VIAddVersionKey "ProductVersion" "0.1.5.0"
+        VIAddVersionKey "FileVersion" "0.1.6.0"
+        VIAddVersionKey "ProductVersion" "0.1.6.0"
         VIAddVersionKey "CompanyName" "AnnasVirtual"
 
         !insertmacro MUI_PAGE_WELCOME
@@ -103,7 +103,7 @@ jobs:
           WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\neutroncli" "DisplayIcon" "$INSTDIR\icon.ico"
           WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\neutroncli" "Publisher" "AnnasVirtual"
           WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\neutroncli" "URLInfoAbout" "https://github.com/annasajkh/Neutron"
-          WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\neutroncli" "DisplayVersion" "0.1.5.0"
+          WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\neutroncli" "DisplayVersion" "0.1.6.0"
           WriteUninstaller "$INSTDIR\Uninstall.exe"
         SectionEnd
 
@@ -145,7 +145,7 @@ jobs:
           done:
             Pop $0
         FunctionEnd
-        
+
         '@
         $nsisScript | Out-File -Encoding ASCII installer.nsi
         
