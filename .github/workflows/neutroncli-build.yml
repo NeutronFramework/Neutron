@@ -134,13 +134,16 @@ jobs:
       with:
         name: linux-packages
 
-    - name: List downloaded artifacts
+    - name: List files
       run: ls -R
 
     - name: Validate artifacts
       run: |
-        for file in ./*/*.deb ./*/*.rpm; do
-          if ! [ -f "$file" ]; then
+        echo "Validating files..."
+        for file in ./linux_packages/*.{deb,rpm}; do
+          if [ -f "$file" ]; then
+            echo "$file exists and is a valid file"
+          else
             echo "Error: $file does not exist or is not a valid file"
             exit 1
           fi
@@ -151,8 +154,10 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         assets=""
-        for file in ./*/*.deb ./*/*.rpm; do
-          assets="$assets $file"
+        for file in ./linux_packages/*.{deb,rpm}; do
+          if [ -f "$file" ]; then
+            assets="$assets $file"
+          fi
         done
         gh release create ${{ github.ref_name }} \
           --title "Release ${{ github.ref_name }}" \
