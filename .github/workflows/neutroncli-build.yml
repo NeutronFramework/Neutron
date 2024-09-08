@@ -72,12 +72,12 @@ jobs:
         !define MUI_ICON "$%TEMP%\icon.ico"
         !define MUI_UNICON "$%TEMP%\icon.ico"
 
-        VIProductVersion "0.1.4.0"
+        VIProductVersion "0.1.5.0"
         VIAddVersionKey "ProductName" "neutroncli"
         VIAddVersionKey "FileDescription" "Build apps with c# and web technologies using webview"
         VIAddVersionKey "LegalCopyright" "AnnasVirtual"
-        VIAddVersionKey "FileVersion" "0.1.4.0"
-        VIAddVersionKey "ProductVersion" "0.1.4.0"
+        VIAddVersionKey "FileVersion" "0.1.5.0"
+        VIAddVersionKey "ProductVersion" "0.1.5.0"
         VIAddVersionKey "CompanyName" "AnnasVirtual"
 
         !insertmacro MUI_PAGE_WELCOME
@@ -103,7 +103,7 @@ jobs:
           WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\neutroncli" "DisplayIcon" "$INSTDIR\icon.ico"
           WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\neutroncli" "Publisher" "AnnasVirtual"
           WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\neutroncli" "URLInfoAbout" "https://github.com/annasajkh/Neutron"
-          WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\neutroncli" "DisplayVersion" "0.1.4.0"
+          WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\neutroncli" "DisplayVersion" "0.1.5.0"
           WriteUninstaller "$INSTDIR\Uninstall.exe"
         SectionEnd
 
@@ -115,10 +115,37 @@ jobs:
 
           # Remove neutroncli from PATH
           ReadRegStr $R0 HKLM "SYSTEM\CurrentControlSet\Control\Session Manager\Environment" "Path"
-          StrReplace $R0 "$INSTDIR;" "" $R0
-          WriteRegStr HKLM "SYSTEM\CurrentControlSet\Control\Session Manager\Environment" "Path" "$R0"
+          ${If} $R0 != ""
+            Push "$R0"
+            Push "$INSTDIR;"
+            Call RemoveFromPath
+            Pop $R1
+            WriteRegStr HKLM "SYSTEM\CurrentControlSet\Control\Session Manager\Environment" "Path" "$R1"
+          ${EndIf}
         SectionEnd
-        
+
+        Function RemoveFromPath
+          Exch $0  ; Path to remove
+          Exch
+          Exch $1  ; Full path string
+          StrCpy $R1 ""
+          StrCpy $R2 0
+          loop:
+            StrCpy $R0 $1 1 $R2
+            StrCmp $R0 "" done
+            IntOp $R2 $R2 + 1
+            StrCmp $R0 ";" next
+            StrCpy $R1 "$R1$R0"
+            Goto loop
+          next:
+            IntOp $R2 $R2 + 1
+            StrCpy $R0 $1 "" $R2
+            StrCmp $0 $R0 +2
+            Goto next
+          done:
+            Pop $0
+        FunctionEnd
+
         '@
         $nsisScript | Out-File -Encoding ASCII installer.nsi
         
