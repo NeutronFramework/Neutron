@@ -14,7 +14,7 @@
 
     <PropertyGroup>
         <PackageId>Neutron</PackageId>
-        <Version>0.0.6</Version>
+        <Version>0.0.7</Version>
         <Title>Neutron</Title>
         <Description>Build apps with c# and web technologies using webview</Description>
         <Authors>AnnasVirtual</Authors>

@@ -21,7 +21,6 @@ static class Program
         var platform = new Option<TargetPlatform?>(name: "--platform", description: "The target platform");
         var buildMode = new Option<BuildMode?>(name: "--build-mode", description: "The build mode");
         var selfContained = new Option<bool>(name: "--self-contained", description: "Toggle self contained or not");
-        var frontend = new Option<bool>(name: "--frontend", description: "Build only the frontend and put the result in dist folder and copy it to the backend");
 
         var rootCommand = new RootCommand("Create apps with c# and webview");
 
@@ -84,10 +83,7 @@ static class Program
             File.WriteAllText(Path.Combine(projectName, projectName, "Program.cs"), Templates.BackendProgramCSBuilder(projectName, frontendName));
             File.WriteAllText(Path.Combine(projectName, projectName, $"{projectName}.csproj"), Templates.BackendCSProjBuilder(projectName, dotnetVersion.ToString()!, frontendName));
 
-            List<string> cliBinaryPath = Environment.GetCommandLineArgs().First().Split(Path.DirectorySeparatorChar).ToList();
-            cliBinaryPath.RemoveAt(cliBinaryPath.Count - 1);
-
-            File.Copy(Path.Combine(string.Join(Path.DirectorySeparatorChar, cliBinaryPath), "icon.ico"), Path.Combine(projectName, projectName, "icon.ico"));
+            File.Copy(Path.Combine(AppContext.BaseDirectory, "icon.ico"), Path.Combine(projectName, projectName, "icon.ico"));
 
             Console.WriteLine("Calling dotnet add package Neutron");
             await Cli.Wrap("dotnet").WithArguments("add package Neutron")
@@ -101,6 +97,7 @@ static class Program
                      .ExecuteBufferedAsync();
 
             Templates.ProjectConfigBuilder(projectName, dotnetVersion.ToString()!, frontendName, projectName);
+
         }, projectName, dotnetVersion, frontendFramework);
 
         Command runProject = new Command("run", "Run a neutron project, should be run in the project directory root, aka the one containing config.json");
@@ -131,6 +128,7 @@ static class Program
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("Platform are not supported");
+                Console.ForegroundColor = ConsoleColor.White;
             }
 
             await Builder.RunBackendAsync(projectConfigRun, "debug", osName);
@@ -140,25 +138,17 @@ static class Program
         {
             platform,
             buildMode,
-            selfContained,
-            frontend
+            selfContained
         };
 
         rootCommand.AddCommand(buildProject);
 
-        buildProject.SetHandler(async (platform, buildMode, selfContained, frontend) =>
+        buildProject.SetHandler(async (platform, buildMode, selfContained) =>
         {
             ProjectConfig? projectConfigBuild = Builder.GetProjectConfig();
 
             if (projectConfigBuild is null)
             {
-                return;
-            }
-
-            if (frontend)
-            {
-                await Builder.BuildFrontendAsync(projectConfigBuild);
-                Builder.MoveDistToBackend(projectConfigBuild);
                 return;
             }
 
@@ -176,7 +166,7 @@ static class Program
             }
 
             await Builder.BuildBackendAsync(projectConfigBuild, buildMode.ToString()!.FirstCharToUpper(), platform.ToString()!.Replace("_", "-"), selfContained);
-        }, platform, buildMode, selfContained, frontend);
+        }, platform, buildMode, selfContained);
 
         return await rootCommand.InvokeAsync(args);
     }

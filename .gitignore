@@ -4,3 +4,5 @@
 /Neutron/Properties
 /neutroncli/obj
 /neutroncli/bin
+/neutroncli/build
+/.github/workflows/my_secrets.yml

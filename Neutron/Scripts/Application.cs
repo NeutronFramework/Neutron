@@ -1,6 +1,5 @@
 ﻿using SharpWebview;
 using SharpWebview.Content;
-using System.Runtime.InteropServices;
 
 namespace Neutron.Scripts;
 
@@ -28,22 +27,7 @@ public class Application
         Width = width;
         Height = height;
 
-        try
-        {
-            if (OperatingSystem.IsLinux())
-            {
-                NativeLibrary.Load(Path.Combine("libs", "linux", "libwebkit2gtk-4.0.so"));
-            }
-
-            webview = new Webview(debug, interceptExternalLinks);
-        }
-        catch (DllNotFoundException exception)
-        {
-            Console.WriteLine("Failed to load the required library.");
-            Console.WriteLine(exception);
-            throw;
-        }
-
+        webview = new Webview(debug, interceptExternalLinks);
         webContent = new WebContent(webContentPath);
 
         webview.SetTitle(Title);
