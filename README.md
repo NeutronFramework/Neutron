@@ -37,7 +37,7 @@ or you can go to the backend c# project directory and type<br/>
 
 it's decoupled from the neutroncli at this point so either way works
 
-i recommend if you use this framework you distribute the app using an installer or a package manager<br/>
+i recommend you distribute your application using an installer or a package manager<br/>
 so that it can enable loopback on windows or install webkit2gtk on linux during app installation<br/>
 so the user wouldn't need do anything extra<br/>
-i might add `neutrocli package` that package the app automatically in the future
+i might add `neutrocli package` that package the app automatically and do anything necessary in the installer so you don't have to
