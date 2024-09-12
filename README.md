@@ -38,3 +38,11 @@ or you can go to the backend c# project directory and type
 ```dotnet publish --configuration Release --runtime win-x64 --self-contained```
 
 it's decoupled from the neutroncli at this point so either way works
+
+i recommend if you use the framework you distribute the app using an installer or a package manager
+
+so it can enable loopback on windows or install webkit2gtk on linux on installation 
+
+so the user of their app wouldn't need do anything extra
+
+i might add `neutrocli package` that package the app automatically in the future
