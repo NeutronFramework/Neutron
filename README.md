@@ -12,37 +12,32 @@ Build apps with c# and web technologies using webview
 - libwebkit2gtk, install using your distro package manager for debian use `sudo apt install libwebkit2gtk-4.0-37` and fedora use `sudo dnf install webkit2gtk4.0` if you distribute the app on linux the user of your app also need to install it
 
 # Initializing The Project
-Download the [neutroncli](https://github.com/annasajkh/Neutron/releases) 
+Download the [neutroncli](https://github.com/annasajkh/Neutron/releases) <br/>
+for windows or linux<br/>
 
-for windows or linux
+open the terminal and type<br/>
+```neutroncli init```<br/>
 
-open the terminal and type
-```neutroncli init```
-
-fill out the option or you can pass it directly
-```neutroncli init --name ProjectName --dotnet-version net8 --framework react_ts```
+fill out the option or you can pass it directly<br/>
+```neutroncli init --name ProjectName --dotnet-version net8 --framework react_ts```<br/>
 
 # Running The Project
-cd to the project directory and type `neutroncli run`
-
-or you can go to backend c# project directory and type `dotnet run`
+cd to the project directory and type `neutroncli run`<br/>
+or you can go to backend c# project directory and type `dotnet run`<br/>
 
 # Building The Project
-cd to the project directory and type 
-```neutroncli build```
+cd to the project directory and type <br/>
+```neutroncli build```<br/>
 
-or pass it directly 
-```neutroncli build --platform win_x64 --build-mode release --self-contained```
+or pass it directly <br/>
+```neutroncli build --platform win_x64 --build-mode release --self-contained```<br/>
 
-or you can go to the backend c# project directory and type
-```dotnet publish --configuration Release --runtime win-x64 --self-contained```
+or you can go to the backend c# project directory and type<br/>
+```dotnet publish --configuration Release --runtime win-x64 --self-contained```<br/>
 
 it's decoupled from the neutroncli at this point so either way works
 
-i recommend if you use the framework you distribute the app using an installer or a package manager
-
-so it can enable loopback on windows or install webkit2gtk on linux on installation 
-
-so the user of their app wouldn't need do anything extra
-
+i recommend if you use this framework you distribute the app using an installer or a package manager<br/>
+so that it can enable loopback on windows or install webkit2gtk on linux during app installation<br/>
+so the user wouldn't need do anything extra<br/>
 i might add `neutrocli package` that package the app automatically in the future
