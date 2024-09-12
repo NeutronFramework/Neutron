@@ -40,4 +40,4 @@ it's decoupled from the neutroncli at this point so either way works
 i recommend you distribute your application using an installer or a package manager<br/>
 so that it can enable loopback on windows or install webkit2gtk on linux during app installation<br/>
 so the user wouldn't need do anything extra<br/>
-i might add `neutrocli package` that package the app automatically and do anything necessary in the installer so you don't have to
+i might add `neutrocli package` that package the app automatically and do everything that it need to run in the installer so you don't have to
