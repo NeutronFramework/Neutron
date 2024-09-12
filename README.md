@@ -23,7 +23,7 @@ fill out the option or you can pass it directly<br/>
 
 # Running The Project
 cd to the project directory and type `neutroncli run`<br/>
-or you can go to backend c# project directory and type `dotnet run`<br/>
+or you can go to the c# project directory part and type `dotnet run`<br/>
 
 # Building The Project
 cd to the project directory and type <br/>
@@ -32,7 +32,7 @@ cd to the project directory and type <br/>
 or pass it directly <br/>
 ```neutroncli build --platform win_x64 --build-mode release --self-contained```<br/>
 
-or you can go to the backend c# project directory and type<br/>
+or you can go to the c# project directory part and type<br/>
 ```dotnet publish --configuration Release --runtime win-x64 --self-contained```<br/>
 
 it's decoupled from the neutroncli at this point so either way works
