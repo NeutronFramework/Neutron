@@ -13,9 +13,9 @@ Build apps with c# and web technologies using webview
 
 # Initializing The Project
 Download the [neutroncli](https://github.com/annasajkh/Neutron/releases) <br/>
-for flatpak you need to install it using sudo for example
+for flatpak you need to install it using sudo for example <br/>
 ```sudo flatpak install neutroncli_0.3.7_x86_64.flatpak```
-also for flatpak after the installation you need to run
+also for flatpak after the installation you need to run <br/>
 ```sudo ln -s /var/lib/flatpak/app/com.annasvirtual.neutroncli/current/active/files/bin/neutroncli /usr/local/bin/neutroncli```
 this will create a symbolic link to make neutroncli command accessible system wide<br/>
 because flatpak uses a sandboxed environment<br/>
