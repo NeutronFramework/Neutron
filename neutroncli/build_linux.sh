@@ -1,9 +1,7 @@
 #!/bin/bash
 
-# Initialize variables
 version="0.3.7"
 
-# Ensure build directories are cleaned up and re-created
 if [ ! -d build ]; then
     mkdir build
 fi
@@ -18,7 +16,6 @@ fi
 
 cd build
 
-# Remove old directories for previous builds
 if [ -d neutroncli_debian ]; then
     rm -rf neutroncli_debian
 fi
@@ -39,14 +36,11 @@ if [ -d ".flatpak-builder" ]; then
     rm -rf ".flatpak-builder"
 fi
 
-# Publish .NET app
 dotnet publish ../neutroncli.csproj --configuration Release --runtime linux-x64 --self-contained true --output ./publish
 
-# Ensure necessary tools are installed
 sudo apt-get update
 sudo apt-get install -y rpm dpkg zlib1g-dev clang file flatpak-builder
 
-# Prepare and build DEB package
 mkdir --parents neutroncli_debian/DEBIAN neutroncli_debian/usr/local/bin
 
 cat <<EOF > neutroncli_debian/DEBIAN/control 
@@ -64,7 +58,6 @@ chmod +x neutroncli_debian/usr/local/bin/neutroncli
 chmod 755 neutroncli_debian/DEBIAN
 dpkg --build neutroncli_debian artifacts/neutroncli_${version}_x86_64.deb
 
-# Prepare and build RPM package
 mkdir --parents neutroncli_rpm/{BUILD,RPMS,SOURCES,SPECS}
 
 cat <<EOF > ./neutroncli_rpm/SPECS/neutroncli.spec
@@ -90,7 +83,6 @@ rpmbuild -bb ./neutroncli_rpm/SPECS/neutroncli.spec --define "_topdir `pwd`/neut
 mv ./neutroncli_rpm/RPMS/x86_64/neutroncli-${version}-1.x86_64.rpm ./neutroncli_rpm/RPMS/x86_64/neutroncli_${version}_x86_64.rpm
 mv ./neutroncli_rpm/RPMS/x86_64/neutroncli_${version}_x86_64.rpm ./artifacts
 
-# Prepare and build Flatpak package
 sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 sudo flatpak install -y flathub org.freedesktop.Platform//21.08 org.freedesktop.Sdk//21.08
 
