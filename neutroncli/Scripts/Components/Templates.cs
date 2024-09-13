@@ -26,12 +26,12 @@ internal class Program
 
     public static string BackendCSProjBuilder(string projectName, string dotnetVersion, string frontendName)
     {
-        return $$"""
+        return $"""
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <ApplicationIcon>icon.ico</ApplicationIcon>
         <OutputType>Exe</OutputType>
-        <TargetFramework>{{dotnetVersion}}</TargetFramework>
+        <TargetFramework>{dotnetVersion}</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <WarningsAsErrors>Nullable</WarningsAsErrors>
@@ -44,13 +44,13 @@ internal class Program
     </PropertyGroup>
 
     <Target Name="BuildFrontend" BeforeTargets="BeforeBuild">
- 	    <Exec Command="npm install" WorkingDirectory="..\{{frontendName}}" ContinueOnError="false" />
-  	    <Exec Command="npm run build" WorkingDirectory="..\{{frontendName}}" ContinueOnError="false" />
+ 	    <Exec Command="npm install" WorkingDirectory="..\{frontendName}" ContinueOnError="false" />
+  	    <Exec Command="npm run build" WorkingDirectory="..\{frontendName}" ContinueOnError="false" />
 
-        <Exec Command="pwsh -Command &quot;Copy-Item -Path '{{frontendName}}\dist' -Destination 'Testing\dist' -Recurse -Force&quot;" WorkingDirectory="..\" Condition="$([MSBuild]::IsOSPlatform('Windows'))" ContinueOnError="true" />      	
-        <Exec Command="powershell -Command &quot;Copy-Item -Path '{{frontendName}}\dist' -Destination 'Testing\dist' -Recurse -Force&quot;" WorkingDirectory="..\" Condition="$([MSBuild]::IsOSPlatform('Windows')) AND '$(ERRORLEVEL)' != '0'" />
+        <Exec Command="pwsh -Command &quot;Copy-Item -Path '{frontendName}\dist' -Destination 'Testing\dist' -Recurse -Force&quot;" WorkingDirectory="..\" Condition="$([MSBuild]::IsOSPlatform('Windows'))" ContinueOnError="true" />      	
+        <Exec Command="powershell -Command &quot;Copy-Item -Path '{frontendName}\dist' -Destination 'Testing\dist' -Recurse -Force&quot;" WorkingDirectory="..\" Condition="$([MSBuild]::IsOSPlatform('Windows')) AND '$(ERRORLEVEL)' != '0'" />
 
-	    <Exec Command="cp -R {{frontendName}}/dist Testing/dist" WorkingDirectory="..\" Condition="$([MSBuild]::IsOSPlatform('Linux')) or $([MSBuild]::IsOSPlatform('OSX'))" />
+	    <Exec Command="cp -R {frontendName}/dist Testing/dist" WorkingDirectory="..\" Condition="$([MSBuild]::IsOSPlatform('Linux')) or $([MSBuild]::IsOSPlatform('OSX'))" />
     </Target>
 
     <Target Name="CopyDistFolderOnBuild" AfterTargets="Build">
