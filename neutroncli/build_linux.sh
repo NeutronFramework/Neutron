@@ -54,8 +54,10 @@ Description: Build apps with C# and web technologies using webview
 EOF
 
 cp --recursive --verbose publish/* neutroncli_debian/usr/local/bin
+
 chmod +x neutroncli_debian/usr/local/bin/neutroncli
 chmod 755 neutroncli_debian/DEBIAN
+
 dpkg --build neutroncli_debian artifacts/neutroncli_${version}_x86_64.deb
 
 mkdir --parents neutroncli_rpm/{BUILD,RPMS,SOURCES,SPECS}
@@ -80,6 +82,7 @@ EOF
 
 cp --recursive --verbose publish/* neutroncli_rpm/SOURCES
 rpmbuild -bb ./neutroncli_rpm/SPECS/neutroncli.spec --define "_topdir `pwd`/neutroncli_rpm"
+
 mv ./neutroncli_rpm/RPMS/x86_64/neutroncli-${version}-1.x86_64.rpm ./neutroncli_rpm/RPMS/x86_64/neutroncli_${version}_x86_64.rpm
 mv ./neutroncli_rpm/RPMS/x86_64/neutroncli_${version}_x86_64.rpm ./artifacts
 
