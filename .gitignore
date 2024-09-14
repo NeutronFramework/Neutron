@@ -5,4 +5,4 @@
 /neutroncli/obj
 /neutroncli/bin
 /neutroncli/build
-/.github/workflows/my_secrets.yml
+/neutroncli/chocolatey_api_key.txt
