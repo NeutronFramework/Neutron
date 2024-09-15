@@ -47,10 +47,8 @@ internal class Program
  	    <Exec Command="npm install" WorkingDirectory="..\{frontendName}" ContinueOnError="false" />
   	    <Exec Command="npm run build" WorkingDirectory="..\{frontendName}" ContinueOnError="false" />
 
-        <Exec Command="pwsh -Command &quot;Copy-Item -Path '{frontendName}\dist' -Destination 'Testing\dist' -Recurse -Force&quot;" WorkingDirectory="..\" Condition="$([MSBuild]::IsOSPlatform('Windows'))" ContinueOnError="true" />      	
-        <Exec Command="powershell -Command &quot;Copy-Item -Path '{frontendName}\dist' -Destination 'Testing\dist' -Recurse -Force&quot;" WorkingDirectory="..\" Condition="$([MSBuild]::IsOSPlatform('Windows')) AND '$(ERRORLEVEL)' != '0'" />
-
-	    <Exec Command="cp -R {frontendName}/dist Testing/dist" WorkingDirectory="..\" Condition="$([MSBuild]::IsOSPlatform('Linux')) or $([MSBuild]::IsOSPlatform('OSX'))" />
+        <Exec Command="powershell -NoProfile -Command &quot;Copy-Item -Path '{frontendName}\dist' -Destination '{projectName}\dist' -Recurse -Force&quot;" WorkingDirectory="..\" Condition="$([MSBuild]::IsOSPlatform('Windows'))"/>
+	    <Exec Command="cp -R {frontendName}/dist {projectName}/dist" WorkingDirectory="..\" Condition="$([MSBuild]::IsOSPlatform('Linux')) or $([MSBuild]::IsOSPlatform('OSX'))" />
     </Target>
 
     <Target Name="CopyDistFolderOnBuild" AfterTargets="Build">

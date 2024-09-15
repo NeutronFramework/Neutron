@@ -3,17 +3,17 @@
     <metadata>
         <id>neutroncli</id>
         <version>0.2.0</version>
-        <title>neutroncli</title>
+        <title>neutroncli - Build apps with C# and web technologies using WebView</title>
         <authors>AnnasVirtual</authors>
         <owners>AnnasVirtual</owners>
         <licenseUrl>https://opensource.org/licenses/MIT</licenseUrl>
-        <projectUrl>https://github.com/annasajkh/Neutron</projectUrl>
         <iconUrl>https://raw.githubusercontent.com/annasajkh/Neutron/main/neutroncli/icon.png</iconUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>Neutron allows you to build desktop apps using web technologies like WebView with C# backend.</description>
         <summary>Build apps with C# and web technologies using WebView</summary>
         <releaseNotes>https://github.com/annasajkh/Neutron/releases</releaseNotes>
         <tags>cli webview csharp</tags>
+        <projectUrl>https://github.com/annasajkh/Neutron</projectUrl>
         <packageSourceUrl>https://github.com/annasajkh/Neutron</packageSourceUrl>
         <projectSourceUrl>https://github.com/annasajkh/Neutron</projectSourceUrl>
         <docsUrl>https://github.com/annasajkh/Neutron/wiki</docsUrl>

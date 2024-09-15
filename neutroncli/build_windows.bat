@@ -12,7 +12,7 @@ cd build
 
 if exist neutroncli_choco rmdir /S /Q neutroncli_choco
 
-dotnet publish ..\neutroncli.csproj --configuration Release --runtime win-x64 --self-contained true --output .\publish
+dotnet publish ..\neutroncli.csproj --configuration Release --runtime win-x64 --output .\publish /p:PublishTrimmed=false /p:PublishAot=false
 
 where choco >nul 2>&1
 if %errorlevel% neq 0 (
@@ -46,10 +46,15 @@ echo SHA256: %EXE_HASH%
 
 (
 echo $ErrorActionPreference = 'Stop'
+echo $installDir = "$env:ProgramFiles\neutroncli"
 echo Write-Host "Removing neutroncli from the system..."
 echo try {
-echo     Remove-Item "$env:ProgramFiles\neutroncli" -Recurse -Force -ErrorAction Stop
-echo     Write-Host "neutroncli uninstalled successfully."
+echo     if (Test-Path $installDir^) {
+echo         Remove-Item $installDir -Recurse -Force -ErrorAction Stop
+echo         Write-Host "neutroncli uninstalled successfully."
+echo     } else {
+echo         Write-Host "neutroncli installation directory not found. Nothing to uninstall."
+echo     }
 echo } catch {
 echo     Write-Host "Failed to uninstall neutroncli: $_"
 echo     exit 1
@@ -58,12 +63,19 @@ echo }
 
 (
 echo $ErrorActionPreference = 'Stop'
+echo $toolsDir = Split-Path -Parent $MyInvocation.MyCommand.Definition
+echo $installDir = "$env:ProgramFiles\neutroncli"
 echo Write-Host "Copying files to installation directory..."
 echo try {
-echo     $installDir = "$env:ProgramFiles\neutroncli"
 echo     New-Item -ItemType Directory -Force -Path $installDir ^| Out-Null
-echo     Copy-Item -Path "$env:ChocolateyPackageFolder\tools\*" -Destination $installDir -Recurse -Force
+echo     Copy-Item -Path "$toolsDir\*" -Destination $installDir -Recurse -Force
 echo     Write-Host "neutroncli installed in $installDir"
+echo     
+echo     $userPath = [Environment]::GetEnvironmentVariable^("PATH", "User"^)
+echo     if ^($userPath -notlike "*$installDir*"^) {
+echo         [Environment]::SetEnvironmentVariable^("PATH", "$userPath;$installDir", "User"^)
+echo         Write-Host "Added $installDir to USER PATH"
+echo     }
 echo } catch {
 echo     Write-Host "Failed to install neutroncli: $_"
 echo     exit 1
