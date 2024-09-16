@@ -1,7 +1,7 @@
 @echo off
 setlocal EnableDelayedExpansion
 
-set version=0.2.1
+set version=0.2.0
 set PROJECT_URL=https://github.com/annasajkh/Neutron
 
 if not exist build mkdir build
@@ -106,7 +106,7 @@ if not defined CHOCOLATEY_API_KEY (
     exit /b 1
 )
 
-@REM echo Pushing Chocolatey package to the Chocolatey repository...
-@REM choco push artifacts\neutroncli.%version%.nupkg --source https://push.chocolatey.org/ --api-key %CHOCOLATEY_API_KEY%
+echo Pushing Chocolatey package to the Chocolatey repository...
+choco push artifacts\neutroncli.%version%.nupkg --source https://push.chocolatey.org/ --api-key %CHOCOLATEY_API_KEY%
 
 endlocal

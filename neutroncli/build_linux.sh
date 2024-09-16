@@ -1,6 +1,6 @@
 #!/bin/bash
 
-version="0.2.1"
+version="0.2.0"
 
 if [ ! -d build ]; then
     mkdir build
