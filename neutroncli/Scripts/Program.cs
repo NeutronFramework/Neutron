@@ -21,6 +21,7 @@ static class Program
         var platform = new Option<TargetPlatform?>(name: "--platform", description: "The target platform");
         var buildMode = new Option<BuildMode?>(name: "--build-mode", description: "The build mode");
         var selfContained = new Option<bool>(name: "--self-contained", description: "Toggle self contained or not");
+        var frontend = new Option<bool>(name: "--frontend", description: "Build only the frontend and put the result in dist folder and copy it to the backend");
 
         var rootCommand = new RootCommand("Create apps with c# and webview");
 
@@ -138,17 +139,24 @@ static class Program
         {
             platform,
             buildMode,
-            selfContained
+            selfContained,
+            frontend
         };
 
         rootCommand.AddCommand(buildProject);
 
-        buildProject.SetHandler(async (platform, buildMode, selfContained) =>
+        buildProject.SetHandler(async (platform, buildMode, selfContained, frontend) =>
         {
             ProjectConfig? projectConfigBuild = Builder.GetProjectConfig();
 
             if (projectConfigBuild is null)
             {
+                return;
+            }
+
+            if (frontend)
+            {
+                await Builder.BuildAndMoveFrontendAsync(projectConfigBuild);
                 return;
             }
 
@@ -166,7 +174,7 @@ static class Program
             }
 
             await Builder.BuildBackendAsync(projectConfigBuild, buildMode.ToString()!.FirstCharToUpper(), platform.ToString()!.Replace("_", "-"), selfContained);
-        }, platform, buildMode, selfContained);
+        }, platform, buildMode, selfContained, frontend);
 
         return await rootCommand.InvokeAsync(args);
     }

@@ -26,57 +26,38 @@ internal class Program
 
     public static string BackendCSProjBuilder(string projectName, string dotnetVersion, string frontendName)
     {
-        return $"""
+        return $$"""
 <Project Sdk="Microsoft.NET.Sdk">
-    <PropertyGroup>
-        <ApplicationIcon>icon.ico</ApplicationIcon>
-        <OutputType>Exe</OutputType>
-        <TargetFramework>{dotnetVersion}</TargetFramework>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>enable</Nullable>
-        <WarningsAsErrors>Nullable</WarningsAsErrors>
-        <InvariantGlobalization>True</InvariantGlobalization>
-    </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>icon.ico</ApplicationIcon>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>{{dotnetVersion}}</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <WarningsAsErrors>Nullable</WarningsAsErrors>
+    <InvariantGlobalization>True</InvariantGlobalization>
+  </PropertyGroup>
 
-    <PropertyGroup Condition="'$(Configuration)'=='Release'">
-        <DebugSymbols>False</DebugSymbols>
-        <DebugType>None</DebugType>
-    </PropertyGroup>
-
-    <Target Name="BuildFrontend" BeforeTargets="BeforeBuild">
- 	    <Exec Command="npm install" WorkingDirectory="..\{frontendName}" ContinueOnError="false" />
-  	    <Exec Command="npm run build" WorkingDirectory="..\{frontendName}" ContinueOnError="false" />
-
-        <Exec Command="powershell -NoProfile -Command &quot;Copy-Item -Path '{frontendName}\dist' -Destination '{projectName}\dist' -Recurse -Force&quot;" WorkingDirectory="..\" Condition="$([MSBuild]::IsOSPlatform('Windows'))"/>
-	    <Exec Command="cp -R {frontendName}/dist {projectName}/dist" WorkingDirectory="..\" Condition="$([MSBuild]::IsOSPlatform('Linux')) or $([MSBuild]::IsOSPlatform('OSX'))" />
-    </Target>
-
-    <Target Name="CopyDistFolderOnBuild" AfterTargets="Build">
-        <ItemGroup>
-            <DistFiles Include="dist\**" />
-        </ItemGroup>
-        <Copy SourceFiles="@(DistFiles)" DestinationFolder="$(OutDir)dist\%(RecursiveDir)" SkipUnchangedFiles="true" />
-    </Target>
-
-    <Target Name="CopyDistFolderOnPublish" AfterTargets="Publish">
-        <ItemGroup>
-            <DistFiles Include="dist\**" />
-        </ItemGroup>
-        <Copy SourceFiles="@(DistFiles)" DestinationFolder="$(PublishDir)dist\%(RecursiveDir)" SkipUnchangedFiles="true" />
-    </Target>
-
-    <Target Name="CopyDistFolderOnRun" BeforeTargets="Build">
-        <ItemGroup>
-            <DistFiles Include="dist\**" />
-        </ItemGroup>
-        <Copy SourceFiles="@(DistFiles)" DestinationFolder="$(OutDir)dist\%(RecursiveDir)" SkipUnchangedFiles="true" />
-    </Target>
-
+  <PropertyGroup Condition="'$(Configuration)'=='Release'">
+    <DebugSymbols>False</DebugSymbols>
+    <DebugType>None</DebugType>
+  </PropertyGroup>
+  
+  <Target Name="BuildFrontend">
+    <Exec Command="neutroncli build --frontend" WorkingDirectory="../" />
+    
     <ItemGroup>
-        <Content Include="dist\**">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </Content>
+      <DistFiles Include="dist\**" />
     </ItemGroup>
+  </Target>
+
+  <Target Name="CopyDistFolderOnBuild" AfterTargets="Build" DependsOnTargets="BuildFrontend">
+    <Copy SourceFiles="@(DistFiles)" DestinationFolder="$(OutDir)dist\%(RecursiveDir)" />
+  </Target>
+
+  <Target Name="CopyDistFolderOnPublish" AfterTargets="Publish" DependsOnTargets="BuildFrontend">
+    <Copy SourceFiles="@(DistFiles)" DestinationFolder="$(PublishDir)dist\%(RecursiveDir)" />
+  </Target>
 </Project>
 """.Trim();
     }
