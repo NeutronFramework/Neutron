@@ -30,8 +30,6 @@ public static class Builder
 
     public static async Task BuildAndMoveFrontendAsync(ProjectConfig projectConfig)
     {
-        var buildTimestampFile = Path.Combine(projectConfig.FrontendName, "build.timestamp");
-
         if (!Directory.Exists(Path.Combine(projectConfig.FrontendName, "node_modules")))
         {
             Console.WriteLine("Running npm install");
@@ -43,9 +41,9 @@ public static class Builder
 
         bool shouldRunBuild = true;
 
-        if (File.Exists(buildTimestampFile))
+        if (File.Exists(".timestamp"))
         {
-            var lastBuildTime = File.GetLastWriteTime(buildTimestampFile);
+            var lastBuildTime = File.GetLastWriteTime(".timestamp");
             var sourceFiles = Directory.GetFiles(Path.Combine(projectConfig.FrontendName, "src"), "*.*", SearchOption.AllDirectories);
 
             shouldRunBuild = sourceFiles.Any(file => File.GetLastWriteTime(file) > lastBuildTime);
@@ -60,8 +58,6 @@ public static class Builder
                 .WithStandardOutputPipe(PipeTarget.ToDelegate(Console.WriteLine))
                 .ExecuteBufferedAsync();
 
-            File.WriteAllText(buildTimestampFile, DateTime.Now.ToString());
-
             if (Directory.Exists(Path.Combine(projectConfig.BackendName, "dist")))
             {
                 Console.WriteLine("Deleting old backend dist folder");
@@ -70,6 +66,9 @@ public static class Builder
 
             Console.WriteLine("Copying dist folder");
             Directory.Move(Path.Combine(projectConfig.FrontendName, "dist"), Path.Combine(projectConfig.BackendName, "dist"));
+
+
+            File.WriteAllText(".timestamp", DateTime.Now.ToString());
         }
         else
         {

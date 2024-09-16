@@ -156,6 +156,11 @@ static class Program
 
             if (frontend)
             {
+                if (File.Exists(".timestamp") && (!Directory.Exists(Path.Combine(projectConfigBuild.BackendName, "dist")) || !Directory.Exists(Path.Combine(projectConfigBuild.BackendName, "bin"))))
+                {
+                    File.Delete(".timestamp");
+                }
+
                 await Builder.BuildAndMoveFrontendAsync(projectConfigBuild);
                 return;
             }

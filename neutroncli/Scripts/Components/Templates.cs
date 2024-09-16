@@ -36,6 +36,7 @@ internal class Program
     <Nullable>enable</Nullable>
     <WarningsAsErrors>Nullable</WarningsAsErrors>
     <InvariantGlobalization>True</InvariantGlobalization>
+    <DisableFastUpToDateCheck>true</DisableFastUpToDateCheck>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)'=='Release'">
