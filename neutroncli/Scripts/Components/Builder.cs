@@ -67,7 +67,6 @@ public static class Builder
             Console.WriteLine("Copying dist folder");
             Directory.Move(Path.Combine(projectConfig.FrontendName, "dist"), Path.Combine(projectConfig.BackendName, "dist"));
 
-
             File.WriteAllText(".timestamp", DateTime.Now.ToString());
         }
         else

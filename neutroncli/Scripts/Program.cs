@@ -151,6 +151,14 @@ static class Program
 
             if (frontend)
             {
+                string diskOutputPath = Path.Combine(projectConfigBuild.BackendName, "bin", "Debug", projectConfigBuild.DotnetVersion, "dist");
+
+                if (Directory.Exists(diskOutputPath))
+                {
+                    Console.WriteLine($"Deleting old {diskOutputPath}");
+                    Directory.Delete(diskOutputPath, recursive: true);
+                }
+
                 if (File.Exists(".timestamp") && (!Directory.Exists(Path.Combine(projectConfigBuild.BackendName, "dist")) || !Directory.Exists(Path.Combine(projectConfigBuild.BackendName, "bin"))))
                 {
                     File.Delete(".timestamp");
