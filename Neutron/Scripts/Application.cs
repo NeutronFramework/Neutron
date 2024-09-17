@@ -6,7 +6,28 @@ namespace Neutron.Scripts;
 
 public class Application
 {
-    public bool Resizable { get; }
+    bool resizable = true;
+    public bool Resizable 
+    { 
+        get
+        {
+            return resizable;
+        }
+
+        set
+        {
+            resizable = value;
+            
+            if (resizable)
+            {
+                webview.SetSize(Width, Height, WebviewHint.None);
+            }
+            else
+            {
+                webview.SetSize(Width, Height, WebviewHint.Fixed);
+            }
+        }
+    }
 
     private WebContent webContent;
     private Webview webview;
@@ -30,7 +51,7 @@ public class Application
 
         webview = new Webview(debug, interceptExternalLinks);
         webContent = new WebContent(webContentPath);
-        
+
         webview.SetTitle(Title);
         webview.SetSize(width, height, WebviewHint.None);
     }
@@ -91,7 +112,7 @@ public class Application
     /// </summary>
     /// <param name="id">The id of the call</param>
     /// <param name="rpcResult">The result of the call</param>
-    /// <param name="returnObject">The return of the function as a Dictionary of object</param>
+    /// <param name="returnObject">The return of the function as a Dictionary of objects</param>
     public void Return(string id, RPCResult rpcResult, Dictionary<string, object> returnObject)
     {
         webview.Return(id, rpcResult, JsonSerializer.Serialize(returnObject));

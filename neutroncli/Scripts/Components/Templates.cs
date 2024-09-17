@@ -16,7 +16,13 @@ internal class Program
     [STAThread]
     static void Main(string[] args)
     {
-        Application application = new Application(title: "{{projectName}}", width: 960, height: 540, webContentPath: Path.Combine(AppContext.BaseDirectory, "dist", debug: true));
+        Application application;
+
+#if DEBUG
+        application = new Application(title: "{{projectName}}", width: 960, height: 540, webContentPath: Path.Combine(AppContext.BaseDirectory, "dist"), debug: true);
+#else
+        application = new Application(title: "{{projectName}}", width: 960, height: 540, webContentPath: Path.Combine(AppContext.BaseDirectory, "dist"));
+#endif
 
         application.Run();
     }
