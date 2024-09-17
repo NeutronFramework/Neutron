@@ -2,7 +2,7 @@
 setlocal EnableDelayedExpansion
 
 set version=0.2.0
-set PROJECT_URL=https://github.com/annasajkh/Neutron
+set PROJECT_URL=https://github.com/NeutronFramework/Neutron
 
 if not exist build mkdir build
 if exist build\publish rmdir /S /Q build\publish

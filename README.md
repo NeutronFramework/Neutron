@@ -12,7 +12,7 @@ Build apps with c# and web technologies using webview
 - libwebkit2gtk, install using your distro package manager for debian use `sudo apt install libwebkit2gtk-4.0-37` and fedora use `sudo dnf install webkit2gtk4.0` if you distribute the application on linux the user of your application also need to install it
 
 # Initializing The Project
-Download the [neutroncli](https://github.com/annasajkh/Neutron/releases)<br/>
+Download the [neutroncli](https://github.com/NeutronFramework/Neutron/releases)<br/>
 or for windows you can also use chocolatey<br/>
 ```choco install neutroncli```<br/>
 for flatpak you need to install it using sudo for example<br/>

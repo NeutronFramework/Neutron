@@ -16,8 +16,8 @@
         <projectUrl>https://github.com/NeutronFramework</projectUrl>
         <packageSourceUrl>https://github.com/NeutronFramework/Neutron</packageSourceUrl>
         <projectSourceUrl>https://github.com/NeutronFramework/Neutron</projectSourceUrl>
-<!--        <docsUrl>https://github.com/annasajkh/Neutron/wiki</docsUrl>
-        <bugTrackerUrl>https://github.com/annasajkh/Neutron/issues</bugTrackerUrl>-->
+<!--        <docsUrl>https://github.com/NeutronFramework/Neutron/wiki</docsUrl>
+        <bugTrackerUrl>https://github.com/NeutronFramework/Neutron/issues</bugTrackerUrl>-->
     </metadata>
     <files>
         <file src="neutroncli_choco\tools\**" target="tools" />
