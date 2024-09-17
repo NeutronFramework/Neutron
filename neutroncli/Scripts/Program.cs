@@ -92,11 +92,6 @@ static class Program
                                     .WithStandardOutputPipe(PipeTarget.ToDelegate(Console.WriteLine))
                                     .ExecuteBufferedAsync();
 
-            await Cli.Wrap("dotnet").WithArguments("add package CliWrap")
-                     .WithWorkingDirectory(Path.Combine(projectName, projectName))
-                     .WithStandardOutputPipe(PipeTarget.ToDelegate(Console.WriteLine))
-                     .ExecuteBufferedAsync();
-
             Templates.ProjectConfigBuilder(projectName, dotnetVersion.ToString()!, frontendName, projectName);
 
         }, projectName, dotnetVersion, frontendFramework);
