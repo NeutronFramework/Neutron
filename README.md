@@ -9,7 +9,7 @@ Build apps with c# and web technologies using webview
 # Prerequisite Linux
 - Node js, install it from https://nodejs.org/en or use NVM (Node Version Manager) to easily install and manage multiple nodejs installations https://github.com/nvm-sh/nvm
 - Dotnet SDK, use the version you want to target the framework support .Net 5, 6, 7, and 8 https://dotnet.microsoft.com/en-us/
-- libwebkit2gtk and libgtk-3, install using your distro package manager for debian use `sudo apt install -y libwebkit2gtk-4.0-dev libgtk-3-dev` and fedora use `sudo dnf install webkit2gtk4,0-devel.x86_64 gtk3-devel.x84_64` if you distribute the application on linux the user of your application also need to install it
+- libwebkit2gtk and libgtk-3, install using your distro package manager for debian use `sudo apt install -y libwebkit2gtk-4.0-dev libgtk-3-dev` and fedora use `sudo dnf install webkit2gtk4.0-devel gtk3-devel` if you distribute the application on linux the user of your application also need to install it
 
 # Initializing The Project
 Download the [neutroncli](https://github.com/NeutronFramework/Neutron/releases)<br/>
