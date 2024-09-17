@@ -149,7 +149,21 @@ public class Application
     {
         MaxWidth = width;
         MaxHeight = height;
+
         webview.SetSize(MaxWidth, MaxHeight, WebviewHint.Max);
+    }
+
+    /// <summary>
+    /// Set the size of the window
+    /// </summary>
+    /// <param name="width">The width of the window</param>
+    /// <param name="height">The height of the window</param>
+    public void SetSize(int width, int height)
+    {
+        Width = width;
+        Height = height;
+
+        webview.SetSize(Width, Height, WebviewHint.None);
     }
 
     /// <summary>
