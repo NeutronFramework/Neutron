@@ -16,7 +16,7 @@ Download the [neutroncli](https://github.com/NeutronFramework/Neutron/releases)<
 or for windows you can also use chocolatey, launch elevated powershell and type<br/>
 ```choco install neutroncli```<br/>
 or download the chocolatry package from [neutroncli](https://github.com/NeutronFramework/Neutron/releases) make a folder, put the package inside, launch elevated powershell, and type<br/>
-```choco install neutroncli --source "path/to/folder/containing/chocolatey" ```<br/>
+```choco install neutroncli --source "path/to/folder/containing/chocolatey"```<br/>
 for flatpak you need to install it using sudo for example<br/>
 ```sudo flatpak install neutroncli_0.2.0_x86_64.flatpak```<br/>
 also for flatpak after the installation you need to run<br/>
