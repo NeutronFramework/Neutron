@@ -12,7 +12,7 @@ Build apps with c# and web technologies using webview
 - libwebkit2gtk and libgtk-3, install using your distro package manager for debian use `sudo apt install -y libwebkit2gtk-4.0-dev libgtk-3-dev` and fedora use `sudo dnf install webkit2gtk4.0-devel gtk3-devel` if you distribute the application on linux the user of your application also need to install it
 
 # Initializing The Project
-Download the [neutroncli](https://github.com/NeutronFramework/Neutron/releases)<br/>
+Download the [neutroncli](https://github.com/NeutronFramework/Neutron/releases)<br/><br/>
 or for windows you can also use chocolatey, launch elevated powershell and type<br/>
 ```choco install neutroncli```<br/><br/>
 or download the chocolatry package from [neutroncli](https://github.com/NeutronFramework/Neutron/releases) make a folder, put the package inside, launch elevated powershell, and type<br/>
