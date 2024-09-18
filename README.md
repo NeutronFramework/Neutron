@@ -40,13 +40,10 @@ go to the ProjectName-frontend folder and type `npm run dev`<br/>
 # Building The Project
 cd to the project directory and type <br/>
 ```neutroncli build```<br/><br/>
-
 or pass it directly <br/>
 ```neutroncli build --platform win_x64 --build-mode release --self-contained```<br/><br/>
-
 or you can go to the c# project directory part and type<br/>
 ```dotnet publish --configuration Release --runtime win-x64 --self-contained```<br/><br/>
-
 i recommend you distribute your application using an installer or a package manager<br/>
 so that it can enable loopback on windows or install webkit2gtk on linux during app installation<br/>
 so the user wouldn't need do anything extra<br/>
