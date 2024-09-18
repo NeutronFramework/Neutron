@@ -45,8 +45,6 @@ or pass it directly <br/>
 or you can go to the c# project directory part and type<br/>
 ```dotnet publish --configuration Release --runtime win-x64 --self-contained```<br/>
 
-it's decoupled from the neutroncli at this point so either way works
-
 i recommend you distribute your application using an installer or a package manager<br/>
 so that it can enable loopback on windows or install webkit2gtk on linux during app installation<br/>
 so the user wouldn't need do anything extra<br/>
