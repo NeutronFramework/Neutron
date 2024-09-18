@@ -14,13 +14,13 @@ Build apps with c# and web technologies using webview
 # Initializing The Project
 Download the [neutroncli](https://github.com/NeutronFramework/Neutron/releases)<br/>
 or for windows you can also use chocolatey, launch elevated powershell and type<br/>
-```choco install neutroncli```<br/>
+```choco install neutroncli```<br/><br/>
 or download the chocolatry package from [neutroncli](https://github.com/NeutronFramework/Neutron/releases) make a folder, put the package inside, launch elevated powershell, and type<br/>
-```choco install neutroncli --source "path/to/folder/containing/chocolatey"```<br/>
+```choco install neutroncli --source "path/to/folder/containing/chocolatey"```<br/><br/>
 for flatpak you need to install it using sudo for example<br/>
-```sudo flatpak install neutroncli_0.2.0_x86_64.flatpak```<br/>
+```sudo flatpak install neutroncli_0.2.0_x86_64.flatpak```<br/><br/>
 also for flatpak after the installation you need to run<br/>
-```sudo ln -s /var/lib/flatpak/app/com.annasvirtual.neutroncli/current/active/files/bin/neutroncli /usr/local/bin/neutroncli```<br/>
+```sudo ln -s /var/lib/flatpak/app/com.annasvirtual.neutroncli/current/active/files/bin/neutroncli /usr/local/bin/neutroncli```<br/><br/>
 this will create a symbolic link to make neutroncli command accessible system wide<br/>
 because flatpak uses a sandboxed environment<br/>
 
@@ -39,13 +39,13 @@ go to the ProjectName-frontend folder and type `npm run dev`<br/>
 
 # Building The Project
 cd to the project directory and type <br/>
-```neutroncli build```<br/>
+```neutroncli build```<br/><br/>
 
 or pass it directly <br/>
-```neutroncli build --platform win_x64 --build-mode release --self-contained```<br/>
+```neutroncli build --platform win_x64 --build-mode release --self-contained```<br/><br/>
 
 or you can go to the c# project directory part and type<br/>
-```dotnet publish --configuration Release --runtime win-x64 --self-contained```<br/>
+```dotnet publish --configuration Release --runtime win-x64 --self-contained```<br/><br/>
 
 i recommend you distribute your application using an installer or a package manager<br/>
 so that it can enable loopback on windows or install webkit2gtk on linux during app installation<br/>
