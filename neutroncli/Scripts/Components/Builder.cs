@@ -15,7 +15,7 @@ public static class Builder
             return null;
         }
 
-        ProjectConfig? projectConfig = null;
+        ProjectConfig? projectConfig;
 
         projectConfig = JsonSerializer.Deserialize(File.ReadAllText("config.json"), SourceGenerationContext.Default.ProjectConfig);
 
@@ -43,8 +43,8 @@ public static class Builder
 
         if (File.Exists(".timestamp"))
         {
-            var lastBuildTime = File.GetLastWriteTime(".timestamp");
-            var sourceFiles = Directory.GetFiles(Path.Combine(projectConfig.FrontendName, "src"), "*.*", SearchOption.AllDirectories);
+            DateTime lastBuildTime = File.GetLastWriteTime(".timestamp");
+            string[] sourceFiles = Directory.GetFiles(Path.Combine(projectConfig.FrontendName, "src"), "*.*", SearchOption.AllDirectories);
 
             shouldRunBuild = sourceFiles.Any(file => File.GetLastWriteTime(file) > lastBuildTime);
         }
@@ -54,9 +54,9 @@ public static class Builder
             Console.WriteLine("Running npm run build");
 
             await Cli.Wrap("npm").WithArguments("run build")
-                .WithWorkingDirectory(projectConfig.FrontendName)
-                .WithStandardOutputPipe(PipeTarget.ToDelegate(Console.WriteLine))
-                .ExecuteBufferedAsync();
+                                 .WithWorkingDirectory(projectConfig.FrontendName)
+                                 .WithStandardOutputPipe(PipeTarget.ToDelegate(Console.WriteLine))
+                                 .ExecuteBufferedAsync();
 
             if (Directory.Exists(Path.Combine(projectConfig.BackendName, "dist")))
             {

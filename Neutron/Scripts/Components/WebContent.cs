@@ -37,6 +37,7 @@ public sealed class WebContent : IWebviewContent
         if (additionalMimeTypes != null)
         {
             FileExtensionContentTypeProvider fileExtensionContentTypeProvider = new FileExtensionContentTypeProvider();
+
             foreach (KeyValuePair<string, string> additionalMimeType in additionalMimeTypes)
             {
                 fileExtensionContentTypeProvider.Mappings.Add(additionalMimeType);
