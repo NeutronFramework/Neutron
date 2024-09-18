@@ -33,7 +33,7 @@ fill out the option or you can pass it directly<br/>
 # Running The Project
 cd to the project directory and type `neutroncli run`<br/>
 or you can go to the c# project directory part and type `dotnet run`<br/>
-or open the c# project on your favorite IDEs and press run<br/>
+or open the c# project on your favorite IDEs and press run<br/><br/>
 you can also run the frontend independently for fast ui iteration and hot reload<br/>
 go to the ProjectName-frontend folder and type `npm run dev`<br/>
 
