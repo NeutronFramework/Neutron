@@ -169,6 +169,17 @@ public class Application
         {
             return (T)Enum.Parse(typeof(T), element.ToString());
         }
+        else if(typeof(T).IsClass && element.ValueKind == JsonValueKind.Object)
+        {
+            T? result = JsonSerializer.Deserialize<T>(element.GetRawText());
+
+            if (result is null)
+            {
+                throw new Exception("Error tying to deserialize a json object");
+            }
+
+            return result;
+        }
 
         throw new InvalidOperationException($"Unsupported parameter type {typeof(T).Name} or incompatible JSON type {element.ValueKind}.");
     }
