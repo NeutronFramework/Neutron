@@ -1,4 +1,5 @@
-﻿using SharpWebview;
+﻿using Neutron.Scripts.Helpers;
+using SharpWebview;
 using SharpWebview.Content;
 using System.Text.Json;
 
@@ -43,17 +44,17 @@ public class Application
     public int MaxWidth { get; private set; }
     public int MaxHeight { get; private set; }
 
-    public delegate object BindingFunction();
-    public delegate object BindingFunction<T>(T param);
-    public delegate object BindingFunction<T1, T2>(T1 param1, T2 param2);
-    public delegate object BindingFunction<T1, T2, T3>(T1 param1, T2 param2, T3 param3);
-    public delegate object BindingFunction<T1, T2, T3, T4>(T1 param1, T2 param2, T3 param3, T4 param4);
-    public delegate object BindingFunction<T1, T2, T3, T4, T5>(T1 param1, T2 param2, T3 param3, T4 param4, T5 param5);
-    public delegate object BindingFunction<T1, T2, T3, T4, T5, T6>(T1 param1, T2 param2, T3 param3, T4 param4, T5 param5, T6 param6);
-    public delegate object BindingFunction<T1, T2, T3, T4, T5, T6, T7>(T1 param1, T2 param2, T3 param3, T4 param4, T5 param5, T6 param6, T7 param7);
-    public delegate object BindingFunction<T1, T2, T3, T4, T5, T6, T7, T8>(T1 param1, T2 param2, T3 param3, T4 param4, T5 param5, T6 param6, T7 param7, T8 param8);
-    public delegate object BindingFunction<T1, T2, T3, T4, T5, T6, T7, T8, T9>(T1 param1, T2 param2, T3 param3, T4 param4, T5 param5, T6 param6, T7 param7, T8 param8, T9 param9);
-    public delegate object BindingFunction<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>(T1 param1, T2 param2, T3 param3, T4 param4, T5 param5, T6 param6, T7 param7, T8 param8, T9 param9, T10 param10);
+    public delegate T BindingFunction<T>();
+    public delegate T1 BindingFunction<T, T1>(T? param);
+    public delegate T3 BindingFunction<T1, T2, T3>(T1? param1, T2? param2);
+    public delegate T4 BindingFunction<T1, T2, T3, T4>(T1? param1, T2? param2, T3? param3);
+    public delegate T5 BindingFunction<T1, T2, T3, T4, T5>(T1? param1, T2? param2, T3? param3, T4? param4);
+    public delegate T6 BindingFunction<T1, T2, T3, T4, T5, T6>(T1? param1, T2? param2, T3? param3, T4? param4, T5? param5);
+    public delegate T7 BindingFunction<T1, T2, T3, T4, T5, T6, T7>(T1? param1, T2? param2, T3? param3, T4? param4, T5? param5, T6? param6);
+    public delegate T8 BindingFunction<T1, T2, T3, T4, T5, T6, T7, T8>(T1? param1, T2? param2, T3? param3, T4? param4, T5? param5, T6? param6, T7? param7);
+    public delegate T9 BindingFunction<T1, T2, T3, T4, T5, T6, T7, T8, T9>(T1? param1, T2? param2, T3? param3, T4? param4, T5? param5, T6? param6, T7? param7, T8? param8);
+    public delegate T10 BindingFunction<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>(T1? param1, T2? param2, T3? param3, T4? param4, T5? param5, T6? param6, T7? param7, T8? param8, T9? param9);
+    public delegate T11 BindingFunction<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11>(T1? param1, T2? param2, T3? param3, T4? param4, T5? param5, T6? param6, T7? param7, T8? param8, T9? param9, T10? param10);
 
 
     public Application(string title, int width, int height, string webContentPath, bool debug = false, bool interceptExternalLinks = false)
@@ -99,112 +100,28 @@ public class Application
         webview.Evaluate(javascriptCode);
     }
 
-    private T DeserializeParameter<T>(JsonElement element)
-    {
-        if (typeof(T) == typeof(int) && element.ValueKind == JsonValueKind.Number)
-        {
-            return (T)(object)element.GetInt32();
-        }
-        else if (typeof(T) == typeof(long) && element.ValueKind == JsonValueKind.Number)
-        {
-            return (T)(object)element.GetInt64();
-        }
-        else if (typeof(T) == typeof(short) && element.ValueKind == JsonValueKind.Number)
-        {
-            return (T)(object)element.GetInt16();
-        }
-        else if (typeof(T) == typeof(byte) && element.ValueKind == JsonValueKind.Number)
-        {
-            return (T)(object)element.GetByte();
-        }
-        else if (typeof(T) == typeof(uint) && element.ValueKind == JsonValueKind.Number)
-        {
-            return (T)(object)element.GetUInt32();
-        }
-        else if (typeof(T) == typeof(ulong) && element.ValueKind == JsonValueKind.Number)
-        {
-            return (T)(object)element.GetUInt64();
-        }
-        else if (typeof(T) == typeof(float) && element.ValueKind == JsonValueKind.Number)
-        {
-            return (T)(object)element.GetSingle();
-        }
-        else if (typeof(T) == typeof(double) && element.ValueKind == JsonValueKind.Number)
-        {
-            return (T)(object)element.GetDouble();
-        }
-        else if (typeof(T) == typeof(decimal) && element.ValueKind == JsonValueKind.Number)
-        {
-            return (T)(object)element.GetDecimal();
-        }
-        else if (typeof(T) == typeof(string) && element.ValueKind == JsonValueKind.String)
-        {
-            return (T)(object)element.ToString();
-        }
-        else if (typeof(T) == typeof(bool) && (element.ValueKind == JsonValueKind.True || element.ValueKind == JsonValueKind.False))
-        {
-            return (T)(object)element.GetBoolean();
-        }
-        else if (typeof(T) == typeof(DateTime) && element.ValueKind == JsonValueKind.String)
-        {
-            return (T)(object)element.GetDateTime();
-        }
-        else if (typeof(T) == typeof(Guid) && element.ValueKind == JsonValueKind.String)
-        {
-            return (T)(object)element.GetGuid();
-        }
-        else if (typeof(T) == typeof(DateTimeOffset) && element.ValueKind == JsonValueKind.String)
-        {
-            return (T)(object)element.GetDateTimeOffset();
-        }
-        else if (typeof(T) == typeof(JsonElement))
-        {
-            return (T)(object)element;
-        }
-        else if (typeof(T) == typeof(object))
-        {
-            return (T)(object)element;
-        }
-        else if (typeof(T).IsEnum && element.ValueKind == JsonValueKind.String)
-        {
-            return (T)Enum.Parse(typeof(T), element.ToString());
-        }
-        else if(typeof(T).IsClass && element.ValueKind == JsonValueKind.Object)
-        {
-            T? result = JsonSerializer.Deserialize<T>(element.GetRawText());
-
-            if (result is null)
-            {
-                throw new Exception("Error tying to deserialize a json object");
-            }
-
-            return result;
-        }
-
-        throw new InvalidOperationException($"Unsupported parameter type {typeof(T).Name} or incompatible JSON type {element.ValueKind}.");
-    }
-
-
     /// <summary>
-    /// Binds a callback so that it will appear under the given name as a global JavaScript function with 0 parameters
+    /// Binds a callback so that it will appear under the given name as a global JavaScript function with 0 parameters and return object of type T
     /// </summary>
     /// <param name="name">Global name of the javascript function</param>
+    /// <typeparam name="T">The return type</typeparam>
     /// <param name="callback">Callback with 0 parameter and returning an object to be sent back to javascript</param>
-    public void Bind(string name, BindingFunction callback)
+    public void Bind<T>(string name, BindingFunction<T> callback)
     {
         webview.Bind(name, (id, _) => {
-            Return(id, RPCResult.Success, new object());
+            Return(id, RPCResult.Success, callback());
         });
     }
 
     /// <summary>
-    /// Binds a callback so that it will appear under the given name as a global JavaScript function with 1 parameter
+    /// Binds a callback so that it will appear under the given name as a global JavaScript function with 1 parameter and return object of type T1
     /// </summary>
     /// <typeparam name="T">The first parameter type</typeparam>
+    /// <typeparam name="T1">The return type</typeparam>
     /// <param name="name">Global name of the javascript function</param>
     /// <param name="callback">Callback with 1 parameter that is the javascript function parameter and returning an object to be sent back to javascript</param>
     /// <exception cref="Exception">Exception is thrown when it failed to deserialize</exception>
-    public void Bind<T>(string name, BindingFunction<T> callback)
+    public void Bind<T, T1>(string name, BindingFunction<T, T1> callback)
     {
         webview.Bind(name, (id, parametersString) =>
         {
@@ -217,9 +134,9 @@ public class Application
                 throw new Exception($"Failed to deserialize parameters for {name}, expected {expectedParamLength} but got {parameters?.Length ?? 0}");
             }
 
-            var param = DeserializeParameter<T>(parameters[0]);
+            var param = JsonHelper.DeserializeToCSharp<T>(parameters[0]);
 
-            Return(id, RPCResult.Success, callback(param));
+            Return(id, RPCResult.Success, callback((T?)param));
         });
     }
 
@@ -228,10 +145,11 @@ public class Application
     /// </summary>
     /// <typeparam name="T1">The first parameter type</typeparam>
     /// <typeparam name="T2">The second parameter type</typeparam>
+    /// <typeparam name="T3">The return type</typeparam>
     /// <param name="name">Global name of the javascript function</param>
     /// <param name="callback">Callback with 2 parameters that is the javascript function parameters and returning an object to be sent back to javascript</param>
     /// <exception cref="Exception">Exception is thrown when it failed to deserialize</exception>
-    public void Bind<T1, T2>(string name, BindingFunction<T1, T2> callback)
+    public void Bind<T1, T2, T3>(string name, BindingFunction<T1, T2, T3> callback)
     {
         webview.Bind(name, (id, parametersString) =>
         {
@@ -244,10 +162,10 @@ public class Application
                 throw new Exception($"Failed to deserialize parameters for {name}, expected {expectedParamLength} but got {parameters?.Length ?? 0}");
             }
 
-            var param1 = DeserializeParameter<T1>(parameters[0]);
-            var param2 = DeserializeParameter<T2>(parameters[1]);
+            var param1 = JsonHelper.DeserializeToCSharp<T1>(parameters[0]);
+            var param2 = JsonHelper.DeserializeToCSharp<T2>(parameters[1]);
 
-            Return(id, RPCResult.Success, callback(param1, param2));
+            Return(id, RPCResult.Success, callback((T1?)param1, (T2?)param2));
         });
     }
 
@@ -257,10 +175,11 @@ public class Application
     /// <typeparam name="T1">The first parameter type</typeparam>
     /// <typeparam name="T2">The second parameter type</typeparam>
     /// <typeparam name="T3">The third parameter type</typeparam>
+    /// <typeparam name="T4">The return type</typeparam>
     /// <param name="name">Global name of the javascript function</param>
     /// <param name="callback">Callback with 3 parameters that is the javascript function parameters and returning an object to be sent back to javascript</param>
     /// <exception cref="Exception">Exception is thrown when it failed to deserialize</exception>
-    public void Bind<T1, T2, T3>(string name, BindingFunction<T1, T2, T3> callback)
+    public void Bind<T1, T2, T3, T4>(string name, BindingFunction<T1, T2, T3, T4> callback)
     {
         webview.Bind(name, (id, parametersString) =>
         {
@@ -273,11 +192,11 @@ public class Application
                 throw new Exception($"Failed to deserialize parameters for {name}, expected {expectedParamLength} but got {parameters?.Length ?? 0}");
             }
 
-            var param1 = DeserializeParameter<T1>(parameters[0]);
-            var param2 = DeserializeParameter<T2>(parameters[1]);
-            var param3 = DeserializeParameter<T3>(parameters[2]);
+            var param1 = JsonHelper.DeserializeToCSharp<T1>(parameters[0]);
+            var param2 = JsonHelper.DeserializeToCSharp<T2>(parameters[1]);
+            var param3 = JsonHelper.DeserializeToCSharp<T3>(parameters[2]);
 
-            Return(id, RPCResult.Success, callback(param1, param2, param3));
+            Return(id, RPCResult.Success, callback((T1?)param1, (T2?)param2, (T3?)param3));
         });
     }
 
@@ -288,10 +207,11 @@ public class Application
     /// <typeparam name="T2">The second parameter type</typeparam>
     /// <typeparam name="T3">The second parameter type</typeparam>
     /// <typeparam name="T4">The fourth parameter type</typeparam>
+    /// <typeparam name="T5">The return type</typeparam>
     /// <param name="name">Global name of the javascript function</param>
     /// <param name="callback">Callback with 4 parameters that is the javascript function parameters and returning an object to be sent back to javascript</param>
     /// <exception cref="Exception">Exception is thrown when it failed to deserialize</exception>
-    public void Bind<T1, T2, T3, T4>(string name, BindingFunction<T1, T2, T3, T4> callback)
+    public void Bind<T1, T2, T3, T4, T5>(string name, BindingFunction<T1, T2, T3, T4, T5> callback)
     {
         webview.Bind(name, (id, parametersString) =>
         {
@@ -304,12 +224,12 @@ public class Application
                 throw new Exception($"Failed to deserialize parameters for {name}, expected {expectedParamLength} but got {parameters?.Length ?? 0}");
             }
 
-            var param1 = DeserializeParameter<T1>(parameters[0]);
-            var param2 = DeserializeParameter<T2>(parameters[1]);
-            var param3 = DeserializeParameter<T3>(parameters[2]);
-            var param4 = DeserializeParameter<T4>(parameters[3]);
+            var param1 = JsonHelper.DeserializeToCSharp<T1>(parameters[0]);
+            var param2 = JsonHelper.DeserializeToCSharp<T2>(parameters[1]);
+            var param3 = JsonHelper.DeserializeToCSharp<T3>(parameters[2]);
+            var param4 = JsonHelper.DeserializeToCSharp<T4>(parameters[3]);
 
-            Return(id, RPCResult.Success, callback(param1, param2, param3, param4));
+            Return(id, RPCResult.Success, callback((T1?)param1, (T2?)param2, (T3?)param3, (T4?)param4));
         });
     }
 
@@ -321,10 +241,11 @@ public class Application
     /// <typeparam name="T3">The second parameter type</typeparam>
     /// <typeparam name="T4">The fourth parameter type</typeparam>
     /// <typeparam name="T5">The fifth parameter type</typeparam>
+    /// <typeparam name="T6">The return type</typeparam>
     /// <param name="name">Global name of the javascript function</param>
     /// <param name="callback">Callback with 5 parameters that is the javascript function parameters and returning an object to be sent back to javascript</param>
     /// <exception cref="Exception">Exception is thrown when it failed to deserialize</exception>
-    public void Bind<T1, T2, T3, T4, T5>(string name, BindingFunction<T1, T2, T3, T4, T5> callback)
+    public void Bind<T1, T2, T3, T4, T5, T6>(string name, BindingFunction<T1, T2, T3, T4, T5, T6> callback)
     {
         webview.Bind(name, (id, parametersString) =>
         {
@@ -337,13 +258,13 @@ public class Application
                 throw new Exception($"Failed to deserialize parameters for {name}, expected {expectedParamLength} but got {parameters?.Length ?? 0}");
             }
 
-            var param1 = DeserializeParameter<T1>(parameters[0]);
-            var param2 = DeserializeParameter<T2>(parameters[1]);
-            var param3 = DeserializeParameter<T3>(parameters[2]);
-            var param4 = DeserializeParameter<T4>(parameters[3]);
-            var param5 = DeserializeParameter<T5>(parameters[4]);
+            var param1 = JsonHelper.DeserializeToCSharp<T1>(parameters[0]);
+            var param2 = JsonHelper.DeserializeToCSharp<T2>(parameters[1]);
+            var param3 = JsonHelper.DeserializeToCSharp<T3>(parameters[2]);
+            var param4 = JsonHelper.DeserializeToCSharp<T4>(parameters[3]);
+            var param5 = JsonHelper.DeserializeToCSharp<T5>(parameters[4]);
 
-            Return(id, RPCResult.Success, callback(param1, param2, param3, param4, param5));
+            Return(id, RPCResult.Success, callback((T1?)param1, (T2?)param2, (T3?)param3, (T4?)param4, (T5?)param5));
         });
     }
 
@@ -356,10 +277,11 @@ public class Application
     /// <typeparam name="T4">The fourth parameter type</typeparam>
     /// <typeparam name="T5">The fifth parameter type</typeparam>
     /// <typeparam name="T6">The sixth parameter type</typeparam>
+    /// <typeparam name="T7">The return type</typeparam>
     /// <param name="name">Global name of the javascript function</param>
     /// <param name="callback">Callback with 6 parameters that is the javascript function parameters and returning an object to be sent back to javascript</param>
     /// <exception cref="Exception">Exception is thrown when it failed to deserialize</exception>
-    public void Bind<T1, T2, T3, T4, T5, T6>(string name, BindingFunction<T1, T2, T3, T4, T5, T6> callback)
+    public void Bind<T1, T2, T3, T4, T5, T6, T7>(string name, BindingFunction<T1, T2, T3, T4, T5, T6, T7> callback)
     {
         webview.Bind(name, (id, parametersString) =>
         {
@@ -372,14 +294,14 @@ public class Application
                 throw new Exception($"Failed to deserialize parameters for {name}, expected {expectedParamLength} but got {parameters?.Length ?? 0}");
             }
 
-            var param1 = DeserializeParameter<T1>(parameters[0]);
-            var param2 = DeserializeParameter<T2>(parameters[1]);
-            var param3 = DeserializeParameter<T3>(parameters[2]);
-            var param4 = DeserializeParameter<T4>(parameters[3]);
-            var param5 = DeserializeParameter<T5>(parameters[4]);
-            var param6 = DeserializeParameter<T6>(parameters[5]);
+            var param1 = JsonHelper.DeserializeToCSharp<T1>(parameters[0]);
+            var param2 = JsonHelper.DeserializeToCSharp<T2>(parameters[1]);
+            var param3 = JsonHelper.DeserializeToCSharp<T3>(parameters[2]);
+            var param4 = JsonHelper.DeserializeToCSharp<T4>(parameters[3]);
+            var param5 = JsonHelper.DeserializeToCSharp<T5>(parameters[4]);
+            var param6 = JsonHelper.DeserializeToCSharp<T6>(parameters[5]);
 
-            Return(id, RPCResult.Success, callback(param1, param2, param3, param4, param5, param6));
+            Return(id, RPCResult.Success, callback((T1?)param1, (T2?)param2, (T3?)param3, (T4?)param4, (T5?)param5, (T6?)param6));
         });
     }
 
@@ -393,10 +315,11 @@ public class Application
     /// <typeparam name="T5">The fifth parameter type</typeparam>
     /// <typeparam name="T6">The sixth parameter type</typeparam>
     /// <typeparam name="T7">The seventh parameter type</typeparam>
+    /// <typeparam name="T8">The return type</typeparam>
     /// <param name="name">Global name of the javascript function</param>
     /// <param name="callback">Callback with 7 parameters that is the javascript function parameters and returning an object to be sent back to javascript</param>
     /// <exception cref="Exception">Exception is thrown when it failed to deserialize</exception>
-    public void Bind<T1, T2, T3, T4, T5, T6, T7>(string name, BindingFunction<T1, T2, T3, T4, T5, T6, T7> callback)
+    public void Bind<T1, T2, T3, T4, T5, T6, T7, T8>(string name, BindingFunction<T1, T2, T3, T4, T5, T6, T7, T8> callback)
     {
         webview.Bind(name, (id, parametersString) =>
         {
@@ -409,15 +332,15 @@ public class Application
                 throw new Exception($"Failed to deserialize parameters for {name}, expected {expectedParamLength} but got {parameters?.Length ?? 0}");
             }
 
-            var param1 = DeserializeParameter<T1>(parameters[0]);
-            var param2 = DeserializeParameter<T2>(parameters[1]);
-            var param3 = DeserializeParameter<T3>(parameters[2]);
-            var param4 = DeserializeParameter<T4>(parameters[3]);
-            var param5 = DeserializeParameter<T5>(parameters[4]);
-            var param6 = DeserializeParameter<T6>(parameters[5]);
-            var param7 = DeserializeParameter<T7>(parameters[6]);
+            var param1 = JsonHelper.DeserializeToCSharp<T1>(parameters[0]);
+            var param2 = JsonHelper.DeserializeToCSharp<T2>(parameters[1]);
+            var param3 = JsonHelper.DeserializeToCSharp<T3>(parameters[2]);
+            var param4 = JsonHelper.DeserializeToCSharp<T4>(parameters[3]);
+            var param5 = JsonHelper.DeserializeToCSharp<T5>(parameters[4]);
+            var param6 = JsonHelper.DeserializeToCSharp<T6>(parameters[5]);
+            var param7 = JsonHelper.DeserializeToCSharp<T7>(parameters[6]);
 
-            Return(id, RPCResult.Success, callback(param1, param2, param3, param4, param5, param6, param7));
+            Return(id, RPCResult.Success, callback((T1?)param1, (T2?)param2, (T3?)param3, (T4?)param4, (T5?)param5, (T6?)param6, (T7?)param7));
         });
     }
 
@@ -432,10 +355,11 @@ public class Application
     /// <typeparam name="T6">The sixth parameter type</typeparam>
     /// <typeparam name="T7">The seventh parameter type</typeparam>
     /// <typeparam name="T8">The eighth parameter type</typeparam>
+    /// <typeparam name="T9">The return type</typeparam>
     /// <param name="name">Global name of the javascript function</param>
     /// <param name="callback">Callback with 8 parameters that is the javascript function parameters and returning an object to be sent back to javascript</param>
     /// <exception cref="Exception">Exception is thrown when it failed to deserialize</exception>
-    public void Bind<T1, T2, T3, T4, T5, T6, T7, T8>(string name, BindingFunction<T1, T2, T3, T4, T5, T6, T7, T8> callback)
+    public void Bind<T1, T2, T3, T4, T5, T6, T7, T8, T9>(string name, BindingFunction<T1, T2, T3, T4, T5, T6, T7, T8, T9> callback)
     {
         webview.Bind(name, (id, parametersString) =>
         {
@@ -448,16 +372,16 @@ public class Application
                 throw new Exception($"Failed to deserialize parameters for {name}, expected {expectedParamLength} but got {parameters?.Length ?? 0}");
             }
 
-            var param1 = DeserializeParameter<T1>(parameters[0]);
-            var param2 = DeserializeParameter<T2>(parameters[1]);
-            var param3 = DeserializeParameter<T3>(parameters[2]);
-            var param4 = DeserializeParameter<T4>(parameters[3]);
-            var param5 = DeserializeParameter<T5>(parameters[4]);
-            var param6 = DeserializeParameter<T6>(parameters[5]);
-            var param7 = DeserializeParameter<T7>(parameters[6]);
-            var param8 = DeserializeParameter<T8>(parameters[7]);
+            var param1 = JsonHelper.DeserializeToCSharp<T1>(parameters[0]);
+            var param2 = JsonHelper.DeserializeToCSharp<T2>(parameters[1]);
+            var param3 = JsonHelper.DeserializeToCSharp<T3>(parameters[2]);
+            var param4 = JsonHelper.DeserializeToCSharp<T4>(parameters[3]);
+            var param5 = JsonHelper.DeserializeToCSharp<T5>(parameters[4]);
+            var param6 = JsonHelper.DeserializeToCSharp<T6>(parameters[5]);
+            var param7 = JsonHelper.DeserializeToCSharp<T7>(parameters[6]);
+            var param8 = JsonHelper.DeserializeToCSharp<T8>(parameters[7]);
 
-            Return(id, RPCResult.Success, callback(param1, param2, param3, param4, param5, param6, param7, param8));
+            Return(id, RPCResult.Success, callback((T1?)param1, (T2?)param2, (T3?)param3, (T4?)param4, (T5?)param5, (T6?)param6, (T7?)param7, (T8?)param8));
         });
     }
 
@@ -473,10 +397,11 @@ public class Application
     /// <typeparam name="T7">The seventh parameter type</typeparam>
     /// <typeparam name="T8">The eighth parameter type</typeparam>
     /// <typeparam name="T9">The ninth parameter type</typeparam>
+    /// <typeparam name="T10">The return type</typeparam>
     /// <param name="name">Global name of the javascript function</param>
     /// <param name="callback">Callback with 9 parameters that is the javascript function parameters and returning an object to be sent back to javascript</param>
     /// <exception cref="Exception">Exception is thrown when it failed to deserialize</exception>
-    public void Bind<T1, T2, T3, T4, T5, T6, T7, T8, T9>(string name, BindingFunction<T1, T2, T3, T4, T5, T6, T7, T8, T9> callback)
+    public void Bind<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>(string name, BindingFunction<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10> callback)
     {
         webview.Bind(name, (id, parametersString) =>
         {
@@ -489,17 +414,17 @@ public class Application
                 throw new Exception($"Failed to deserialize parameters for {name}, expected {expectedParamLength} but got {parameters?.Length ?? 0}");
             }
 
-            var param1 = DeserializeParameter<T1>(parameters[0]);
-            var param2 = DeserializeParameter<T2>(parameters[1]);
-            var param3 = DeserializeParameter<T3>(parameters[2]);
-            var param4 = DeserializeParameter<T4>(parameters[3]);
-            var param5 = DeserializeParameter<T5>(parameters[4]);
-            var param6 = DeserializeParameter<T6>(parameters[5]);
-            var param7 = DeserializeParameter<T7>(parameters[6]);
-            var param8 = DeserializeParameter<T8>(parameters[7]);
-            var param9 = DeserializeParameter<T9>(parameters[8]);
+            var param1 = JsonHelper.DeserializeToCSharp<T1>(parameters[0]);
+            var param2 = JsonHelper.DeserializeToCSharp<T2>(parameters[1]);
+            var param3 = JsonHelper.DeserializeToCSharp<T3>(parameters[2]);
+            var param4 = JsonHelper.DeserializeToCSharp<T4>(parameters[3]);
+            var param5 = JsonHelper.DeserializeToCSharp<T5>(parameters[4]);
+            var param6 = JsonHelper.DeserializeToCSharp<T6>(parameters[5]);
+            var param7 = JsonHelper.DeserializeToCSharp<T7>(parameters[6]);
+            var param8 = JsonHelper.DeserializeToCSharp<T8>(parameters[7]);
+            var param9 = JsonHelper.DeserializeToCSharp<T9>(parameters[8]);
 
-            Return(id, RPCResult.Success, callback(param1, param2, param3, param4, param5, param6, param7, param8, param9));
+            Return(id, RPCResult.Success, callback((T1?)param1, (T2?)param2, (T3?)param3, (T4?)param4, (T5?)param5, (T6?)param6, (T7?)param7, (T8?)param8, (T9?)param9));
         });
     }
 
@@ -516,10 +441,11 @@ public class Application
     /// <typeparam name="T8">The eighth parameter type</typeparam>
     /// <typeparam name="T9">The ninth parameter type</typeparam>
     /// <typeparam name="T10">The tenth parameter type</typeparam>
+    /// <typeparam name="T11">The return type</typeparam>
     /// <param name="name">Global name of the javascript function</param>
     /// <param name="callback">Callback with 10 parameters that is the javascript function parameters and returning an object to be sent back to javascript</param>
     /// <exception cref="Exception">Exception is thrown when it failed to deserialize</exception>
-    public void Bind<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>(string name, BindingFunction<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10> callback)
+    public void Bind<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11>(string name, BindingFunction<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11> callback)
     {
         webview.Bind(name, (id, parametersString) =>
         {
@@ -532,18 +458,18 @@ public class Application
                 throw new Exception($"Failed to deserialize parameters for {name}, expected {expectedParamLength} but got {parameters?.Length ?? 0}");
             }
 
-            var param1 = DeserializeParameter<T1>(parameters[0]);
-            var param2 = DeserializeParameter<T2>(parameters[1]);
-            var param3 = DeserializeParameter<T3>(parameters[2]);
-            var param4 = DeserializeParameter<T4>(parameters[3]);
-            var param5 = DeserializeParameter<T5>(parameters[4]);
-            var param6 = DeserializeParameter<T6>(parameters[5]);
-            var param7 = DeserializeParameter<T7>(parameters[6]);
-            var param8 = DeserializeParameter<T8>(parameters[7]);
-            var param9 = DeserializeParameter<T9>(parameters[8]);
-            var param10 = DeserializeParameter<T10>(parameters[10]);
+            var param1 = JsonHelper.DeserializeToCSharp<T1>(parameters[0]);
+            var param2 = JsonHelper.DeserializeToCSharp<T2>(parameters[1]);
+            var param3 = JsonHelper.DeserializeToCSharp<T3>(parameters[2]);
+            var param4 = JsonHelper.DeserializeToCSharp<T4>(parameters[3]);
+            var param5 = JsonHelper.DeserializeToCSharp<T5>(parameters[4]);
+            var param6 = JsonHelper.DeserializeToCSharp<T6>(parameters[5]);
+            var param7 = JsonHelper.DeserializeToCSharp<T7>(parameters[6]);
+            var param8 = JsonHelper.DeserializeToCSharp<T8>(parameters[7]);
+            var param9 = JsonHelper.DeserializeToCSharp<T9>(parameters[8]);
+            var param10 = JsonHelper.DeserializeToCSharp<T10>(parameters[10]);
 
-            Return(id, RPCResult.Success, callback(param1, param2, param3, param4, param5, param6, param7, param8, param9, param10));
+            Return<T11>(id, RPCResult.Success, callback((T1?)param1, (T2?)param2, (T3?)param3, (T4?)param4, (T5?)param5, (T6?)param6, (T7?)param7, (T8?)param8, (T9?)param9, (T10?)param10));
         });
     }
 
@@ -553,9 +479,9 @@ public class Application
     /// <param name="id">The id of the call</param>
     /// <param name="rpcResult">The result of the call</param>
     /// <param name="returnObject">The return of the function as a Dictionary of object</param>
-    public void Return(string id, RPCResult rpcResult, object returnObject)
+    public void Return<T>(string id, RPCResult rpcResult, T returnObject)
     {
-        webview.Return(id, rpcResult, JsonSerializer.Serialize(returnObject));
+        webview.Return(id, rpcResult, JsonSerializer.Serialize<T>(returnObject));
     }
 
     /// <summary>
