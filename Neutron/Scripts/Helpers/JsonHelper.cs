@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Reflection;
 using System.Text.Json;
 
 namespace Neutron.Scripts.Helpers;
@@ -125,10 +126,10 @@ public static class JsonHelper
         {
             Type elementType = type.GetElementType()!;
             
-            var array = Array.CreateInstance(elementType, element.GetArrayLength());
+            Array array = Array.CreateInstance(elementType, element.GetArrayLength());
             int index = 0;
             
-            foreach (var item in element.EnumerateArray())
+            foreach (JsonElement item in element.EnumerateArray())
             {
                 array.SetValue(DeserializeToType(elementType, item), index++);
             }
@@ -143,13 +144,13 @@ public static class JsonHelper
             if (genericType == typeof(List<>) || genericType == typeof(IList<>) || genericType == typeof(ICollection<>) || genericType == typeof(IEnumerable<>))
             {
                 Type elementType = type.GetGenericArguments()[0];
-                
-                var list = (IList)Activator.CreateInstance(typeof(List<>).MakeGenericType(elementType))!;
+                IList list = (IList)Activator.CreateInstance(typeof(List<>).MakeGenericType(elementType))!;
 
-                foreach (var item in element.EnumerateArray())
+                foreach (JsonElement item in element.EnumerateArray())
                 {
                     list.Add(DeserializeToType(elementType, item));
                 }
+
                 return list;
             }
         }
@@ -159,8 +160,7 @@ public static class JsonHelper
 
     private static object? DeserializeToType(Type type, JsonElement element)
     {
-        var method = typeof(JsonHelper).GetMethod(nameof(DeserializeToCSharp))!.MakeGenericMethod(type);
-
+        MethodInfo method = typeof(JsonHelper).GetMethod(nameof(DeserializeToCSharp))!.MakeGenericMethod(type);
         return method.Invoke(null, [element]);
     }
 
