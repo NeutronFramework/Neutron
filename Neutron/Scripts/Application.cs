@@ -80,7 +80,7 @@ public class Application
     }
 
     /// <summary>
-    /// Injects JavaScript code at the initialization of the new page.Every time the
+    /// Injects javascript code at the initialization of the new page.Every time the
     /// webview will open a new page. this initialization code will be executed. It is
     /// guaranteed that code is executed before window.onload.
     /// Execute this method before Application.Navigate()
@@ -92,7 +92,7 @@ public class Application
     }
 
     /// <summary>
-    ///  Evaluates arbitrary JavaScript code. Evaluation happens asynchronously, also the result of the expression is ignored. Use bindings if you want to receive notifications about the results of the evaluation.
+    ///  Evaluates arbitrary javascript code. Evaluation happens asynchronously, also the result of the expression is ignored. Use bindings if you want to receive notifications about the results of the evaluation.
     /// </summary>
     /// <param name="javascriptCode">The javascript code to execute</param>
     public void Evaluate(string javascriptCode)
@@ -101,11 +101,11 @@ public class Application
     }
 
     /// <summary>
-    /// Binds a callback so that it will appear under the given name as a global JavaScript function with 0 parameters and return object of type T
+    /// Binds a callback so that it will appear under the given name as a global javascript function with 0 parameters
     /// </summary>
     /// <param name="name">Global name of the javascript function</param>
     /// <typeparam name="T">The return type</typeparam>
-    /// <param name="callback">Callback with 0 parameter and returning an object to be sent back to javascript</param>
+    /// <param name="callback">Callback with 0 parameter and returning a variable with type T to be sent back to javascript</param>
     public void Bind<T>(string name, BindingFunction<T> callback)
     {
         webview.Bind(name, (id, _) => {
@@ -114,12 +114,12 @@ public class Application
     }
 
     /// <summary>
-    /// Binds a callback so that it will appear under the given name as a global JavaScript function with 1 parameter and return object of type T1
+    /// Binds a callback so that it will appear under the given name as a global javascript function with 1 parameter
     /// </summary>
     /// <typeparam name="T">The first parameter type</typeparam>
     /// <typeparam name="T1">The return type</typeparam>
     /// <param name="name">Global name of the javascript function</param>
-    /// <param name="callback">Callback with 1 parameter that is the javascript function parameter and returning an object to be sent back to javascript</param>
+    /// <param name="callback">Callback with 1 parameter that is the javascript function parameter and returning a variable with type T1 to be sent back to javascript</param>
     /// <exception cref="Exception">Exception is thrown when it failed to deserialize</exception>
     public void Bind<T, T1>(string name, BindingFunction<T, T1> callback)
     {
@@ -141,13 +141,13 @@ public class Application
     }
 
     /// <summary>
-    /// Binds a callback so that it will appear under the given name as a global JavaScript function with 2 parameters
+    /// Binds a callback so that it will appear under the given name as a global javascript function with 2 parameters
     /// </summary>
     /// <typeparam name="T1">The first parameter type</typeparam>
     /// <typeparam name="T2">The second parameter type</typeparam>
     /// <typeparam name="T3">The return type</typeparam>
     /// <param name="name">Global name of the javascript function</param>
-    /// <param name="callback">Callback with 2 parameters that is the javascript function parameters and returning an object to be sent back to javascript</param>
+    /// <param name="callback">Callback with 2 parameters that is the javascript function parameters and returning a variable with type T3 to be sent back to javascript</param>
     /// <exception cref="Exception">Exception is thrown when it failed to deserialize</exception>
     public void Bind<T1, T2, T3>(string name, BindingFunction<T1, T2, T3> callback)
     {
@@ -170,14 +170,14 @@ public class Application
     }
 
     /// <summary>
-    /// Binds a callback so that it will appear under the given name as a global JavaScript function with 3 parameters
+    /// Binds a callback so that it will appear under the given name as a global javascript function with 3 parameters
     /// </summary>
     /// <typeparam name="T1">The first parameter type</typeparam>
     /// <typeparam name="T2">The second parameter type</typeparam>
     /// <typeparam name="T3">The third parameter type</typeparam>
     /// <typeparam name="T4">The return type</typeparam>
     /// <param name="name">Global name of the javascript function</param>
-    /// <param name="callback">Callback with 3 parameters that is the javascript function parameters and returning an object to be sent back to javascript</param>
+    /// <param name="callback">Callback with 3 parameters that is the javascript function parameters and returning a variable with type T4 to be sent back to javascript</param>
     /// <exception cref="Exception">Exception is thrown when it failed to deserialize</exception>
     public void Bind<T1, T2, T3, T4>(string name, BindingFunction<T1, T2, T3, T4> callback)
     {
@@ -201,7 +201,7 @@ public class Application
     }
 
     /// <summary>
-    /// Binds a callback so that it will appear under the given name as a global JavaScript function with 4 parameters
+    /// Binds a callback so that it will appear under the given name as a global javascript function with 4 parameters
     /// </summary>
     /// <typeparam name="T1">The first parameter type</typeparam>
     /// <typeparam name="T2">The second parameter type</typeparam>
@@ -209,7 +209,7 @@ public class Application
     /// <typeparam name="T4">The fourth parameter type</typeparam>
     /// <typeparam name="T5">The return type</typeparam>
     /// <param name="name">Global name of the javascript function</param>
-    /// <param name="callback">Callback with 4 parameters that is the javascript function parameters and returning an object to be sent back to javascript</param>
+    /// <param name="callback">Callback with 4 parameters that is the javascript function parameters and returning a variable with type T5 to be sent back to javascript</param>
     /// <exception cref="Exception">Exception is thrown when it failed to deserialize</exception>
     public void Bind<T1, T2, T3, T4, T5>(string name, BindingFunction<T1, T2, T3, T4, T5> callback)
     {
@@ -234,7 +234,7 @@ public class Application
     }
 
     /// <summary>
-    /// Binds a callback so that it will appear under the given name as a global JavaScript function with 5 parameters
+    /// Binds a callback so that it will appear under the given name as a global javascript function with 5 parameters
     /// </summary>
     /// <typeparam name="T1">The first parameter type</typeparam>
     /// <typeparam name="T2">The second parameter type</typeparam>
@@ -243,7 +243,7 @@ public class Application
     /// <typeparam name="T5">The fifth parameter type</typeparam>
     /// <typeparam name="T6">The return type</typeparam>
     /// <param name="name">Global name of the javascript function</param>
-    /// <param name="callback">Callback with 5 parameters that is the javascript function parameters and returning an object to be sent back to javascript</param>
+    /// <param name="callback">Callback with 5 parameters that is the javascript function parameters and returning a variable with type T6 to be sent back to javascript</param>
     /// <exception cref="Exception">Exception is thrown when it failed to deserialize</exception>
     public void Bind<T1, T2, T3, T4, T5, T6>(string name, BindingFunction<T1, T2, T3, T4, T5, T6> callback)
     {
@@ -269,7 +269,7 @@ public class Application
     }
 
     /// <summary>
-    /// Binds a callback so that it will appear under the given name as a global JavaScript function with 6 parameters
+    /// Binds a callback so that it will appear under the given name as a global javascript function with 6 parameters
     /// </summary>
     /// <typeparam name="T1">The first parameter type</typeparam>
     /// <typeparam name="T2">The second parameter type</typeparam>
@@ -279,7 +279,7 @@ public class Application
     /// <typeparam name="T6">The sixth parameter type</typeparam>
     /// <typeparam name="T7">The return type</typeparam>
     /// <param name="name">Global name of the javascript function</param>
-    /// <param name="callback">Callback with 6 parameters that is the javascript function parameters and returning an object to be sent back to javascript</param>
+    /// <param name="callback">Callback with 6 parameters that is the javascript function parameters and returning a variable with type T7 to be sent back to javascript</param>
     /// <exception cref="Exception">Exception is thrown when it failed to deserialize</exception>
     public void Bind<T1, T2, T3, T4, T5, T6, T7>(string name, BindingFunction<T1, T2, T3, T4, T5, T6, T7> callback)
     {
@@ -306,7 +306,7 @@ public class Application
     }
 
     /// <summary>
-    /// Binds a callback so that it will appear under the given name as a global JavaScript function with 7 parameters
+    /// Binds a callback so that it will appear under the given name as a global javascript function with 7 parameters
     /// </summary>
     /// <typeparam name="T1">The first parameter type</typeparam>
     /// <typeparam name="T2">The second parameter type</typeparam>
@@ -317,7 +317,7 @@ public class Application
     /// <typeparam name="T7">The seventh parameter type</typeparam>
     /// <typeparam name="T8">The return type</typeparam>
     /// <param name="name">Global name of the javascript function</param>
-    /// <param name="callback">Callback with 7 parameters that is the javascript function parameters and returning an object to be sent back to javascript</param>
+    /// <param name="callback">Callback with 7 parameters that is the javascript function parameters and returning a variable with type T8 to be sent back to javascript</param>
     /// <exception cref="Exception">Exception is thrown when it failed to deserialize</exception>
     public void Bind<T1, T2, T3, T4, T5, T6, T7, T8>(string name, BindingFunction<T1, T2, T3, T4, T5, T6, T7, T8> callback)
     {
@@ -345,7 +345,7 @@ public class Application
     }
 
     /// <summary>
-    /// Binds a callback so that it will appear under the given name as a global JavaScript function with 8 parameters
+    /// Binds a callback so that it will appear under the given name as a global javascript function with 8 parameters
     /// </summary>
     /// <typeparam name="T1">The first parameter type</typeparam>
     /// <typeparam name="T2">The second parameter type</typeparam>
@@ -357,7 +357,7 @@ public class Application
     /// <typeparam name="T8">The eighth parameter type</typeparam>
     /// <typeparam name="T9">The return type</typeparam>
     /// <param name="name">Global name of the javascript function</param>
-    /// <param name="callback">Callback with 8 parameters that is the javascript function parameters and returning an object to be sent back to javascript</param>
+    /// <param name="callback">Callback with 8 parameters that is the javascript function parameters and returning a variable with type T9 to be sent back to javascript</param>
     /// <exception cref="Exception">Exception is thrown when it failed to deserialize</exception>
     public void Bind<T1, T2, T3, T4, T5, T6, T7, T8, T9>(string name, BindingFunction<T1, T2, T3, T4, T5, T6, T7, T8, T9> callback)
     {
@@ -386,7 +386,7 @@ public class Application
     }
 
     /// <summary>
-    /// Binds a callback so that it will appear under the given name as a global JavaScript function with 9 parameters
+    /// Binds a callback so that it will appear under the given name as a global javascript function with 9 parameters
     /// </summary>
     /// <typeparam name="T1">The first parameter type</typeparam>
     /// <typeparam name="T2">The second parameter type</typeparam>
@@ -399,7 +399,7 @@ public class Application
     /// <typeparam name="T9">The ninth parameter type</typeparam>
     /// <typeparam name="T10">The return type</typeparam>
     /// <param name="name">Global name of the javascript function</param>
-    /// <param name="callback">Callback with 9 parameters that is the javascript function parameters and returning an object to be sent back to javascript</param>
+    /// <param name="callback">Callback with 9 parameters that is the javascript function parameters and returning a variable with type T10 to be sent back to javascript</param>
     /// <exception cref="Exception">Exception is thrown when it failed to deserialize</exception>
     public void Bind<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>(string name, BindingFunction<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10> callback)
     {
@@ -429,7 +429,7 @@ public class Application
     }
 
     /// <summary>
-    /// Binds a callback so that it will appear under the given name as a global JavaScript function with 10 parameters
+    /// Binds a callback so that it will appear under the given name as a global javascript function with 10 parameters
     /// </summary>
     /// <typeparam name="T1">The first parameter type</typeparam>
     /// <typeparam name="T2">The second parameter type</typeparam>
@@ -443,7 +443,7 @@ public class Application
     /// <typeparam name="T10">The tenth parameter type</typeparam>
     /// <typeparam name="T11">The return type</typeparam>
     /// <param name="name">Global name of the javascript function</param>
-    /// <param name="callback">Callback with 10 parameters that is the javascript function parameters and returning an object to be sent back to javascript</param>
+    /// <param name="callback">Callback with 10 parameters that is the javascript function parameters and returning a variable with type T11 to be sent back to javascript</param>
     /// <exception cref="Exception">Exception is thrown when it failed to deserialize</exception>
     public void Bind<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11>(string name, BindingFunction<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11> callback)
     {
@@ -467,7 +467,7 @@ public class Application
             var param7 = JsonHelper.DeserializeToCSharp<T7>(parameters[6]);
             var param8 = JsonHelper.DeserializeToCSharp<T8>(parameters[7]);
             var param9 = JsonHelper.DeserializeToCSharp<T9>(parameters[8]);
-            var param10 = JsonHelper.DeserializeToCSharp<T10>(parameters[10]);
+            var param10 = JsonHelper.DeserializeToCSharp<T10>(parameters[9]);
 
             Return<T11>(id, RPCResult.Success, callback((T1?)param1, (T2?)param2, (T3?)param3, (T4?)param4, (T5?)param5, (T6?)param6, (T7?)param7, (T8?)param8, (T9?)param9, (T10?)param10));
         });
