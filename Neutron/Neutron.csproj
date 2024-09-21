@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFramework>net8.0</TargetFramework>
+        <TargetFrameworks>net7.0;net8.0</TargetFrameworks>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <WarningsAsErrors>Nullable</WarningsAsErrors>
@@ -15,7 +15,7 @@
 
     <PropertyGroup>
         <PackageId>Neutron</PackageId>
-        <Version>0.1.8</Version>
+        <Version>0.2.3</Version>
         <Title>Neutron</Title>
         <Description>Build apps with c# and web technologies using webview</Description>
         <Authors>AnnasVirtual</Authors>
@@ -26,7 +26,7 @@
         <RepositoryType>git</RepositoryType>
         <RepositoryUrl>https://github.com/NeutronFramework/Neutron</RepositoryUrl>
         <PackageTags>csharp, webview, gui</PackageTags>
-        <PackageLicenseFile>README.md</PackageLicenseFile>
+        <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
         <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     </PropertyGroup>
 
@@ -39,6 +39,10 @@
             <Pack>True</Pack>
             <PackagePath>/</PackagePath>
         </None>
+        <None Include="LICENSE.txt">
+            <Pack>True</Pack>
+            <PackagePath>/</PackagePath>
+        </None>
     </ItemGroup>
 
     <ItemGroup>
@@ -46,7 +50,7 @@
         <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.11.0" />
         <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.11.0" />
         <PackageReference Include="NativeFileDialogSharp" Version="0.6.0-alpha" />
-        <PackageReference Include="SharpWebview" Version="0.10.0" />
+        <PackageReference Include="NeutronSharpWebview" Version="*" />
     </ItemGroup>
 
 </Project>

@@ -1,35 +1,12 @@
 ﻿using Neutron.Scripts.Helpers;
-using SharpWebview;
-using SharpWebview.Content;
+using NeutronSharpWebview.Scripts.Content;
+using NeutronSharpWebview.Scripts.Core;
 using System.Text.Json;
 
 namespace Neutron.Scripts;
 
 public class Application
 {
-    bool resizable = true;
-    public bool Resizable 
-    { 
-        get
-        {
-            return resizable;
-        }
-
-        set
-        {
-            resizable = value;
-            
-            if (resizable)
-            {
-                webview.SetSize(Width, Height, WebviewHint.None);
-            }
-            else
-            {
-                webview.SetSize(Width, Height, WebviewHint.Fixed);
-            }
-        }
-    }
-
     private WebContent webContent;
     private Webview webview;
 
@@ -67,7 +44,7 @@ public class Application
         webContent = new WebContent(webContentPath);
 
         webview.SetTitle(Title);
-        webview.SetSize(width, height, WebviewHint.None);
+        webview.SetSize(width, height);
     }
 
     /// <summary>
@@ -529,7 +506,31 @@ public class Application
         Width = width;
         Height = height;
 
-        webview.SetSize(Width, Height, WebviewHint.None);
+        webview.SetSize(Width, Height);
+    }
+
+    /// <summary>
+    /// Maximize the window
+    /// </summary>
+    public void Maximize()
+    {
+        webview.Maximize();
+    }
+
+    /// <summary>
+    /// Minimize the window
+    /// </summary>
+    public void Minimize()
+    {
+        webview.Minimize();
+    }
+
+    /// <summary>
+    /// Center the window
+    /// </summary>
+    public void Center()
+    {
+        webview.Center();
     }
 
     /// <summary>

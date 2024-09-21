@@ -161,7 +161,7 @@ public static class JsonHelper
     private static object? DeserializeToType(Type type, JsonElement element)
     {
         MethodInfo method = typeof(JsonHelper).GetMethod(nameof(DeserializeToCSharp))!.MakeGenericMethod(type);
-        return method.Invoke(null, [element]);
+        return method.Invoke(null, new object[] { element });
     }
 
 }
