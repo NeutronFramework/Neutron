@@ -50,13 +50,13 @@ static class Program
 
             if (frontendFramework is null)
             {
-                Enum.TryParse(UI.InputField("Frontend framework", ["vanilla", "vanilla_ts", "vue", "vue_ts", "react", "react_ts", "react_swc", "react_swc_ts", "preact", "preact_ts", "lit", "lit_ts", "svelte", "svelte_ts", "solid", "solid_ts", "qwik", "qwik_ts"]), out FrontendFramework frontendFrameworkTemp);
+                Enum.TryParse(UI.InputField("Frontend framework", Enum.GetNames(typeof(FrontendFramework)).ToHashSet()), out FrontendFramework frontendFrameworkTemp);
                 frontendFramework = frontendFrameworkTemp;
             }
 
             if (dotnetVersion is null)
             {
-                Enum.TryParse(UI.InputField("Dotnet version", ["net5", "net6", "net7", "net8"]), out DotnetVersion dotnetVersionTemp);
+                Enum.TryParse(UI.InputField("Dotnet version", Enum.GetNames(typeof(DotnetVersion)).ToHashSet()), out DotnetVersion dotnetVersionTemp);
                 dotnetVersion = dotnetVersionTemp;
             }
 
@@ -170,14 +170,14 @@ static class Program
 
             if (platform is null)
             {
-                Enum.TryParse(UI.InputField("Target platform", ["win_x64", "linux_x64"]), out TargetPlatform platformTemp);
+                Enum.TryParse(UI.InputField("Target platform", Enum.GetNames(typeof(TargetPlatform)).ToHashSet()), out TargetPlatform platformTemp);
 
                 platform = platformTemp;
             }
 
             if (buildMode is null)
             {
-                Enum.TryParse(UI.InputField("Build mode", ["debug", "release"]), out BuildMode buildModeTemp);
+                Enum.TryParse(UI.InputField("Build mode", Enum.GetNames(typeof(BuildMode)).ToHashSet()), out BuildMode buildModeTemp);
                 buildMode = buildModeTemp;
             }
 

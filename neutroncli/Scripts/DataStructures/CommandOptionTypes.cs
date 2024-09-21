@@ -2,8 +2,6 @@
 
 public enum DotnetVersion
 {
-    net5,
-    net6,
     net7,
     net8,
 }

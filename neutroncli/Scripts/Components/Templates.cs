@@ -23,6 +23,7 @@ internal class Program
 #else
         application = new Application(title: "{{projectName}}", width: 960, height: 540, webContentPath: Path.Combine(AppContext.BaseDirectory, "dist"));
 #endif
+        application.Center();
 
         application.Run();
     }
@@ -77,5 +78,4 @@ internal class Program
 
         File.WriteAllText(Path.Combine(projectName, "config.json"), jsonString);
     }
-
 }
