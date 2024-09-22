@@ -42,7 +42,7 @@ echo * Required installation: dotnet 8, git, visual studio desktop development w
 echo.
 echo Building the executable:
 echo * Open powershell
-echo * Run git clone https://github.com/NeutronFramework/Neutron
+echo * Run git clone https://github.com/NeutronFramework/Neutron --depth 1
 echo * Run cd .\Neutron\neutroncli\
 echo * Run .\build_windows.bat
 echo.
