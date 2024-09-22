@@ -38,7 +38,7 @@ echo On the following environment:
 echo * Windows 11 64-bit, x64-based processor. Version 10.0.22631 Build 22631
 echo * Microsoft Visual Studio Community 2022 Version 17.11.4
 echo * Powershell version 5.1.22621.4111 BuildVersion 10.0.22621.4111
-echo * Required installation: dotnet 8, git, and chocolatey
+echo * Required installation: dotnet 8, git, visual studio desktop development with c++ for aot compilation, and chocolatey
 echo.
 echo Building the executable:
 echo * Open powershell
