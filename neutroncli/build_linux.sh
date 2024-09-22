@@ -38,6 +38,29 @@ fi
 
 dotnet publish ../neutroncli.csproj --configuration Release --runtime linux-x64 --self-contained true --output ./publish
 
+if [ $? -ne 0 ]; then
+    echo "Dotnet publish failed."
+    exit 1
+fi
+
+cd publish || exit
+zip -r "../neutroncli_${version}_linux_86_64.zip" ./*
+
+if [ $? -ne 0 ]; then
+    echo "Compression failed."
+    exit 1
+fi
+
+cd ..
+
+mv "neutroncli_${version}_linux_86_64.zip" artifacts/
+
+if [ $? -ne 0 ]; then
+    echo "Move failed."
+    exit 1
+fi
+
+
 sudo apt-get update
 sudo apt-get install -y rpm dpkg zlib1g-dev clang file flatpak-builder
 
