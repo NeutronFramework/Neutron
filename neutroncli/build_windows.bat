@@ -1,8 +1,18 @@
 @echo off
 setlocal EnableDelayedExpansion
 
-set version=0.2.0
+set version=0.2.1
 set PROJECT_URL=https://github.com/NeutronFramework/Neutron
+
+where choco >nul 2>&1
+if %errorlevel% neq 0 (
+    echo Installing Chocolatey...
+    powershell -NoProfile -ExecutionPolicy Bypass -Command "Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))"
+    if !errorlevel! neq 0 (
+        echo Failed to install Chocolatey. Exiting.
+        exit /b 1
+    )
+)
 
 if not exist build mkdir build
 if exist build\publish rmdir /S /Q build\publish
@@ -20,7 +30,7 @@ copy ..\chocolatey\chocolateyInstall.ps1 neutroncli_choco\tools\chocolateyInstal
 copy ..\chocolatey\chocolateyUninstall.ps1 neutroncli_choco\tools\chocolateyUninstall.ps1
 copy ..\chocolatey\neutroncli.nuspec neutroncli.nuspec
 
-dotnet publish ..\neutroncli.csproj --configuration Release --runtime win-x64 --output .\publish
+dotnet publish ..\neutroncli.csproj --configuration Release --runtime win-x64 --output .\publish /p:PublishTrimmed=false /p:PublishAot=false
 
 if %errorlevel% neq 0 (
     echo Dotnet publish failed.
