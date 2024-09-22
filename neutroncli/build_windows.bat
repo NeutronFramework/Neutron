@@ -55,9 +55,9 @@ echo Building the executable:
 echo * Open powershell
 echo * Run git clone https://github.com/NeutronFramework/Neutron
 echo * Run cd .\Neutron\neutroncli\
-echo * Run dotnet publish neutroncli.csproj --configuration Release --runtime win-x64 /p:PublishTrimmed=false /p:PublishAot=false --output .\publish
+echo * Run .\build_windows.bat
 echo.
-echo executable can be found in \publish
+echo executable can be found in build\publish
 echo.
 echo You can use 'Get-FileHash neutroncli.exe -Algorithm SHA256' to get the hash
 echo * neutroncli.exe SHA hash should be: %EXE_HASH%
