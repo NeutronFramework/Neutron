@@ -8,16 +8,6 @@ if not exist build mkdir build
 if exist build\publish rmdir /S /Q build\publish
 if not exist build\artifacts mkdir build\artifacts
 
-where choco >nul 2>&1
-if %errorlevel% neq 0 (
-    echo Installing Chocolatey...
-    powershell -NoProfile -ExecutionPolicy Bypass -Command "Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))"
-    if %errorlevel% neq 0 (
-        echo Failed to install Chocolatey. Exiting.
-        exit /b 1
-    )
-)
-
 cd build
 
 if exist neutroncli_choco rmdir /S /Q neutroncli_choco
@@ -29,7 +19,6 @@ copy ..\LICENSE.txt neutroncli_choco\tools\LICENSE.txt
 copy ..\chocolatey\chocolateyInstall.ps1 neutroncli_choco\tools\chocolateyInstall.ps1
 copy ..\chocolatey\chocolateyUninstall.ps1 neutroncli_choco\tools\chocolateyUninstall.ps1
 copy ..\chocolatey\neutroncli.nuspec neutroncli.nuspec
-
 
 dotnet publish ..\neutroncli.csproj --configuration Release --runtime win-x64 --output .\publish
 
@@ -49,7 +38,7 @@ echo On the following environment:
 echo * Windows 11 64-bit, x64-based processor. Version 10.0.22631 Build 22631
 echo * Microsoft Visual Studio Community 2022 Version 17.11.4
 echo * Powershell version 5.1.22621.4111 BuildVersion 10.0.22621.4111
-echo * Required installation: dotnet 8, git
+echo * Required installation: dotnet 8, git, and chocolatey
 echo.
 echo Building the executable:
 echo * Open powershell
