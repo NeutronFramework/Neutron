@@ -22,35 +22,42 @@ copy ..\chocolatey\neutroncli.nuspec neutroncli.nuspec
 
 dotnet publish ..\neutroncli.csproj --configuration Release --runtime win-x64 --output .\publish
 
+if %errorlevel% neq 0 (
+    echo Dotnet publish failed.
+    exit /b %errorlevel%
+)
+
+cd publish
+tar -a -cf ..\neutroncli_%version%_win_86_64.zip *.*
+
+if %errorlevel% neq 0 (
+    echo Compression failed.
+    exit /b %errorlevel%
+)
+
+cd ..
+move neutroncli_%version%_win_86_64.zip artifacts\
+
+if %errorlevel% neq 0 (
+    echo Move failed.
+    exit /b %errorlevel%
+)
+
 for /f %%i in ('powershell -command "(Get-FileHash publish\neutroncli.exe -Algorithm SHA256).Hash"') do (
     set "EXE_HASH=%%i"
 )
 
 (
+echo VERIFICATION
+echo.
 echo Verification is intended to assist the Chocolatey moderators and community
 echo in verifying that this package's contents are trustworthy.
 echo.
-echo The executable in this package are built from source:
-echo Repository: https://github.com/NeutronFramework/Neutron/tree/main/neutroncli
-echo Tag: %version%
+echo Go to https://github.com/NeutronFramework/Neutron/releases/tag/%version% and download neutroncli_%version%_win_86_64.zip
+echo extract it and you will find neutroncli.exe
 echo.
-echo On the following environment:
-echo * Windows 11 64-bit, x64-based processor. Version 10.0.22631 Build 22631
-echo * Microsoft Visual Studio Community 2022 Version 17.11.4
-echo * Powershell version 5.1.22621.4111 BuildVersion 10.0.22621.4111
-echo * Required installation: dotnet 8, git, visual studio desktop development with c++ for aot compilation, and chocolatey
-echo.
-echo Building the executable:
-echo * Open powershell
-echo * Run git clone https://github.com/NeutronFramework/Neutron --depth 1
-echo * Run cd .\Neutron\neutroncli\
-echo * Run .\build_windows.bat
-echo.
-echo executable can be found in build\publish
-echo.
-echo You can use 'Get-FileHash neutroncli.exe -Algorithm SHA256' to get the hash
+echo You can then use 'Get-FileHash neutroncli.exe -Algorithm SHA256' to get the hash
 echo * neutroncli.exe SHA hash should be: %EXE_HASH%
-
 ) > neutroncli_choco\tools\VERIFICATION.txt
 
 xcopy /E /I publish neutroncli_choco\tools
