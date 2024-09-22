@@ -27,7 +27,10 @@ if %errorlevel% neq 0 (
 mkdir neutroncli_choco\tools
 
 copy ..\LICENSE.txt neutroncli_choco\tools\LICENSE.txt
-copy ..\neutroncli.nuspec neutroncli.nuspec
+
+copy ..\chocolatey\chocolateyInstall.ps1 neutroncli_choco\tools\chocolateyInstall.ps1
+copy ..\chocolatey\chocolateyUninstall.ps1 neutroncli_choco\tools\chocolateyUninstall.ps1
+copy ..\chocolatey\neutroncli.nuspec neutroncli.nuspec
 
 for /f "skip=1 delims=" %%i in ('certutil -hashfile publish\neutroncli.exe SHA256') do (
     set "EXE_HASH=%%i"
@@ -36,51 +39,33 @@ for /f "skip=1 delims=" %%i in ('certutil -hashfile publish\neutroncli.exe SHA25
 :breakloop
 
 (
-echo This package contains the neutroncli executable and associated files.
+echo VERIFICATION
+echo Verification is intended to assist the Chocolatey moderators and community
+echo in verifying that this package's contents are trustworthy.
 echo.
-echo Verification:
-echo 1. Download the binary from the official repository: %PROJECT_URL%/releases
-echo 2. Ensure the file hashes match the following:
-echo SHA256: %EXE_HASH%
+echo The executable in this package are built from source:
+echo Repository: https://github.com/NeutronFramework/Neutron/tree/main/neutroncli
+echo Tag: %version%
+echo SHA: %EXE_HASH%
+echo.
+echo On the following environment:
+echo * Windows 11 64-bit, x64-based processor. Version 10.0.22631 Build 22631
+echo * Microsoft Visual Studio Community 2022 Version 17.11.4
+echo * Powershell version 5.1.22621.4111 BuildVersion 10.0.22621.4111
+echo * Required installation: dotnet 8, git
+echo.
+echo Building the executable:
+echo * Open powershell
+echo * Run git clone https://github.com/NeutronFramework/Neutron
+echo * Run cd .\Neutron\neutroncli\
+echo * Run dotnet publish neutroncli.csproj --configuration Release --runtime win-x64 /p:PublishTrimmed=false /p:PublishAot=false
+echo.
+echo executable can be found in bin\Release\net8.0\win-x64\publish
+echo.
+echo You can use powershell function 'Get-FileHash' to get the hash
+echo * neutroncli.exe SHA should be: %EXE_HASH%
+
 ) > neutroncli_choco\tools\VERIFICATION.txt
-
-(
-echo $ErrorActionPreference = 'Stop'
-echo $installDir = "$env:ProgramFiles\neutroncli"
-echo Write-Host "Removing neutroncli from the system..."
-echo try {
-echo     if (Test-Path $installDir^) {
-echo         Remove-Item $installDir -Recurse -Force -ErrorAction Stop
-echo         Write-Host "neutroncli uninstalled successfully."
-echo     } else {
-echo         Write-Host "neutroncli installation directory not found. Nothing to uninstall."
-echo     }
-echo } catch {
-echo     Write-Host "Failed to uninstall neutroncli: $_"
-echo     exit 1
-echo }
-) > neutroncli_choco\tools\chocolateyUninstall.ps1
-
-(
-echo $ErrorActionPreference = 'Stop'
-echo $toolsDir = Split-Path -Parent $MyInvocation.MyCommand.Definition
-echo $installDir = "$env:ProgramFiles\neutroncli"
-echo Write-Host "Copying files to installation directory..."
-echo try {
-echo     New-Item -ItemType Directory -Force -Path $installDir ^| Out-Null
-echo     Copy-Item -Path "$toolsDir\*" -Destination $installDir -Recurse -Force
-echo     Write-Host "neutroncli installed in $installDir"
-echo     
-echo     $userPath = [Environment]::GetEnvironmentVariable^("PATH", "User"^)
-echo     if ^($userPath -notlike "*$installDir*"^) {
-echo         [Environment]::SetEnvironmentVariable^("PATH", "$userPath;$installDir", "User"^)
-echo         Write-Host "Added $installDir to USER PATH"
-echo     }
-echo } catch {
-echo     Write-Host "Failed to install neutroncli: $_"
-echo     exit 1
-echo }
-) > neutroncli_choco\tools\chocolateyInstall.ps1
 
 xcopy /E /I publish neutroncli_choco\tools
 
@@ -90,6 +75,7 @@ choco pack neutroncli.nuspec
 if exist neutroncli.%version%.nupkg (
     echo Package found, moving to artifacts folder...
     move neutroncli.%version%.nupkg artifacts\
+
     if exist artifacts\neutroncli.%version%.nupkg (
         echo File successfully moved to artifacts folder.
     ) else (
@@ -100,13 +86,5 @@ if exist neutroncli.%version%.nupkg (
     echo Package neutroncli.%version%.nupkg not found.
     exit /b 1
 )
-
-if not defined CHOCOLATEY_API_KEY (
-    echo API key environment variable not set. Please set CHOCOLATEY_API_KEY.
-    exit /b 1
-)
-
-echo Pushing Chocolatey package to the Chocolatey repository...
-choco push artifacts\neutroncli.%version%.nupkg --source https://push.chocolatey.org/ --api-key %CHOCOLATEY_API_KEY%
 
 endlocal
