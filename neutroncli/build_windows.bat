@@ -39,14 +39,12 @@ for /f "skip=1 delims=" %%i in ('certutil -hashfile publish\neutroncli.exe SHA25
 :breakloop
 
 (
-echo VERIFICATION
 echo Verification is intended to assist the Chocolatey moderators and community
 echo in verifying that this package's contents are trustworthy.
 echo.
 echo The executable in this package are built from source:
 echo Repository: https://github.com/NeutronFramework/Neutron/tree/main/neutroncli
 echo Tag: %version%
-echo SHA: %EXE_HASH%
 echo.
 echo On the following environment:
 echo * Windows 11 64-bit, x64-based processor. Version 10.0.22631 Build 22631
