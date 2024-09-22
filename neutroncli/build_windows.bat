@@ -31,7 +31,7 @@ copy ..\chocolatey\chocolateyUninstall.ps1 neutroncli_choco\tools\chocolateyUnin
 copy ..\chocolatey\neutroncli.nuspec neutroncli.nuspec
 
 
-dotnet publish ..\neutroncli.csproj --configuration Release --runtime win-x64 --output .\publish /p:PublishTrimmed=false /p:PublishAot=false
+dotnet publish ..\neutroncli.csproj --configuration Release --runtime win-x64 --output .\publish
 
 for /f %%i in ('powershell -command "(Get-FileHash publish\neutroncli.exe -Algorithm SHA256).Hash"') do (
     set "EXE_HASH=%%i"
