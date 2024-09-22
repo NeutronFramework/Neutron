@@ -8,12 +8,6 @@ if not exist build mkdir build
 if exist build\publish rmdir /S /Q build\publish
 if not exist build\artifacts mkdir build\artifacts
 
-cd build
-
-if exist neutroncli_choco rmdir /S /Q neutroncli_choco
-
-dotnet publish ..\neutroncli.csproj --configuration Release --runtime win-x64 --output .\publish /p:PublishTrimmed=false /p:PublishAot=false
-
 where choco >nul 2>&1
 if %errorlevel% neq 0 (
     echo Installing Chocolatey...
@@ -24,6 +18,10 @@ if %errorlevel% neq 0 (
     )
 )
 
+cd build
+
+if exist neutroncli_choco rmdir /S /Q neutroncli_choco
+
 mkdir neutroncli_choco\tools
 
 copy ..\LICENSE.txt neutroncli_choco\tools\LICENSE.txt
@@ -32,11 +30,12 @@ copy ..\chocolatey\chocolateyInstall.ps1 neutroncli_choco\tools\chocolateyInstal
 copy ..\chocolatey\chocolateyUninstall.ps1 neutroncli_choco\tools\chocolateyUninstall.ps1
 copy ..\chocolatey\neutroncli.nuspec neutroncli.nuspec
 
-for /f "skip=1 delims=" %%i in ('certutil -hashfile publish\neutroncli.exe SHA256') do (
+
+dotnet publish ..\neutroncli.csproj --configuration Release --runtime win-x64 --output .\publish /p:PublishTrimmed=false /p:PublishAot=false
+
+for /f %%i in ('powershell -command "(Get-FileHash publish\neutroncli.exe -Algorithm SHA256).Hash"') do (
     set "EXE_HASH=%%i"
-    goto :breakloop
 )
-:breakloop
 
 (
 echo Verification is intended to assist the Chocolatey moderators and community
@@ -56,12 +55,12 @@ echo Building the executable:
 echo * Open powershell
 echo * Run git clone https://github.com/NeutronFramework/Neutron
 echo * Run cd .\Neutron\neutroncli\
-echo * Run dotnet publish neutroncli.csproj --configuration Release --runtime win-x64 /p:PublishTrimmed=false /p:PublishAot=false
+echo * Run dotnet publish neutroncli.csproj --configuration Release --runtime win-x64 /p:PublishTrimmed=false /p:PublishAot=false --output .\publish
 echo.
-echo executable can be found in bin\Release\net8.0\win-x64\publish
+echo executable can be found in \publish
 echo.
-echo You can use powershell function 'Get-FileHash' to get the hash
-echo * neutroncli.exe SHA should be: %EXE_HASH%
+echo You can use 'Get-FileHash neutroncli.exe -Algorithm SHA256' to get the hash
+echo * neutroncli.exe SHA hash should be: %EXE_HASH%
 
 ) > neutroncli_choco\tools\VERIFICATION.txt
 
