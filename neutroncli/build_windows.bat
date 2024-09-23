@@ -1,7 +1,7 @@
 @echo off
 setlocal EnableDelayedExpansion
 
-set version=0.2.1
+set version=0.2.2
 set PROJECT_URL=https://github.com/NeutronFramework/Neutron
 
 where choco >nul 2>&1
@@ -30,7 +30,7 @@ copy ..\chocolatey\chocolateyInstall.ps1 neutroncli_choco\tools\chocolateyInstal
 copy ..\chocolatey\chocolateyUninstall.ps1 neutroncli_choco\tools\chocolateyUninstall.ps1
 copy ..\chocolatey\neutroncli.nuspec neutroncli.nuspec
 
-dotnet publish ..\neutroncli.csproj --configuration Release --runtime win-x64 --output .\publish /p:PublishTrimmed=false /p:PublishAot=false
+dotnet publish ..\neutroncli.csproj --configuration Release --runtime win-x64 --output .\publish
 
 if %errorlevel% neq 0 (
     echo Dotnet publish failed.
