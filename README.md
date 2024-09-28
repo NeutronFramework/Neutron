@@ -4,7 +4,7 @@ Build apps with c# and web technologies using webview
 # Prerequisite Windows
 - Node js, install it from https://nodejs.org/en or use NVM (Node Version Manager) to easily install and manage multiple nodejs installations https://github.com/coreybutler/nvm-windows
 - Dotnet SDK, use the version you want to target, this framework support .Net 7, and 8 https://dotnet.microsoft.com/en-us/
-- Enable Loopback, you need to enable the Loopback to make webview works on windows, run `CheckNetIsolation LoopbackExempt -a -n="Microsoft.win32webviewhost_cw5n1h2txyewy"` with elevated permission powershell, your user of your application also need to do that, it's recommended to use an installer when distributing your application so you can enable Loopback in the installation script 
+- Enable Loopback, you need to enable the Loopback to make webview works on windows, run `CheckNetIsolation LoopbackExempt -a -n="Microsoft.win32webviewhost_cw5n1h2txyewy"` with an elevated permission powershell, your user of your application also need to do that, it's recommended to use an installer when distributing your application so you can enable loopback in the installation script 
 
 # Prerequisite Linux
 - Node js, install it from https://nodejs.org/en or use NVM (Node Version Manager) to easily install and manage multiple nodejs installations https://github.com/nvm-sh/nvm
@@ -13,16 +13,16 @@ Build apps with c# and web technologies using webview
 
 # Initializing The Project
 Download the [neutroncli](https://github.com/NeutronFramework/Neutron/releases)<br/><br/>
-or for windows you can also use chocolatey, launch elevated powershell and type<br/>
+or for windows you can also use chocolatey, launch an elevated powershell and type<br/>
 ```choco install neutroncli```<br/><br/>
-or download the chocolatry package from [neutroncli](https://github.com/NeutronFramework/Neutron/releases) make a folder, put the package inside, launch elevated powershell, and type<br/>
+or download the chocolatey package from [neutroncli](https://github.com/NeutronFramework/Neutron/releases) make a folder, put the package inside, launch an elevated powershell, and type<br/>
 ```choco install neutroncli --source "path/to/folder/containing/chocolatey"```<br/><br/>
 for flatpak you need to install it using sudo for example<br/>
 ```sudo flatpak install neutroncli_0.2.0_x86_64.flatpak```<br/><br/>
 also for flatpak after the installation you need to run<br/>
 ```sudo ln -s /var/lib/flatpak/app/com.annasvirtual.neutroncli/current/active/files/bin/neutroncli /usr/local/bin/neutroncli```<br/><br/>
 this will create a symbolic link to make neutroncli command accessible system wide<br/>
-because flatpak uses a sandboxed environment<br/>
+this is because flatpak uses a sandboxed environment<br/>
 
 open the terminal and type<br/>
 ```neutroncli init```<br/>
@@ -32,10 +32,10 @@ fill out the option or you can pass it directly<br/>
 
 # Running The Project
 cd to the project directory and type `neutroncli run`<br/>
-or you can go to the c# project directory part and type `dotnet run`<br/>
+or you can go to the c# project directory and type `dotnet run`<br/>
 or open the c# project on your favorite IDEs and press run<br/><br/>
 you can also run the frontend independently for fast ui iteration and hot reload<br/>
-go to the ProjectName-frontend folder and type `npm run dev`<br/>
+go to the project-name-frontend folder and type `npm run dev`<br/>
 
 # Building The Project
 cd to the project directory and type <br/>
