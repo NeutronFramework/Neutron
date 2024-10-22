@@ -109,7 +109,7 @@ public static class JsonHelper
             return (T)DeserializeEnumerable(type, element);
         }
 
-        if (element.ValueKind == JsonValueKind.Object || (type.IsClass && !type.IsPrimitive))
+        if (element.ValueKind == JsonValueKind.Object || type.IsClass && !type.IsPrimitive)
         {
             return JsonSerializer.Deserialize<T>(element.GetRawText(), new JsonSerializerOptions
             {
@@ -125,10 +125,10 @@ public static class JsonHelper
         if (type.IsArray)
         {
             Type elementType = type.GetElementType()!;
-            
+
             Array array = Array.CreateInstance(elementType, element.GetArrayLength());
             int index = 0;
-            
+
             foreach (JsonElement item in element.EnumerateArray())
             {
                 array.SetValue(DeserializeToType(elementType, item), index++);
@@ -140,7 +140,7 @@ public static class JsonHelper
         if (type.IsGenericType)
         {
             Type genericType = type.GetGenericTypeDefinition();
-            
+
             if (genericType == typeof(List<>) || genericType == typeof(IList<>) || genericType == typeof(ICollection<>) || genericType == typeof(IEnumerable<>))
             {
                 Type elementType = type.GetGenericArguments()[0];
