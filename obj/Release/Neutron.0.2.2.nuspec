@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>Neutron</id>
+    <version>0.2.2</version>
+    <title>Neutron</title>
+    <authors>AnnasVirtual</authors>
+    <license type="file">LICENSE.txt</license>
+    <licenseUrl>https://aka.ms/deprecateLicenseUrl</licenseUrl>
+    <icon>icon.png</icon>
+    <readme>README.md</readme>
+    <projectUrl>https://github.com/NeutronFramework/Neutron</projectUrl>
+    <description>Build apps with c# and web technologies using webview</description>
+    <copyright>Copyright (c) 2024 AnnasVirtual, Copyright (c) 2018 Josh Turpen, Will Speak</copyright>
+    <tags>csharp, webview, gui</tags>
+    <repository type="git" url="https://github.com/NeutronFramework/Neutron" commit="15dbd8c390613ccf90582dabbe38956e88111751" />
+    <dependencies>
+      <group targetFramework="net7.0">
+        <dependency id="CliWrap" version="3.6.6" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.CodeAnalysis.CSharp" version="4.11.0" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.CodeAnalysis.Common" version="4.11.0" exclude="Build,Analyzers" />
+        <dependency id="NativeFileDialogSharp" version="0.6.0-alpha" exclude="Build,Analyzers" />
+        <dependency id="NeutronSharpWebview" version="0.11.1" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework="net8.0">
+        <dependency id="CliWrap" version="3.6.6" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.CodeAnalysis.CSharp" version="4.11.0" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.CodeAnalysis.Common" version="4.11.0" exclude="Build,Analyzers" />
+        <dependency id="NativeFileDialogSharp" version="0.6.0-alpha" exclude="Build,Analyzers" />
+        <dependency id="NeutronSharpWebview" version="0.11.1" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="M:\Projects\Programming\NeutronFramework\Neutron\Neutron\bin\Release\net7.0\Neutron.dll" target="lib\net7.0\Neutron.dll" />
+    <file src="M:\Projects\Programming\NeutronFramework\Neutron\Neutron\bin\Release\net8.0\Neutron.dll" target="lib\net8.0\Neutron.dll" />
+    <file src="M:\Projects\Programming\NeutronFramework\Neutron\Neutron\icon.png" target="\icon.png" />
+    <file src="M:\Projects\Programming\NeutronFramework\Neutron\Neutron\README.md" target="\README.md" />
+    <file src="M:\Projects\Programming\NeutronFramework\Neutron\Neutron\LICENSE.txt" target="\LICENSE.txt" />
+  </files>
+</package>
