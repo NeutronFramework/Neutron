@@ -15,7 +15,7 @@
 
     <PropertyGroup>
         <PackageId>Neutron</PackageId>
-        <Version>0.2.7</Version>
+        <Version>0.2.8</Version>
         <Title>Neutron</Title>
         <Description>Build apps with c# and web technologies using webview</Description>
         <Authors>AnnasVirtual</Authors>
@@ -46,10 +46,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="CliWrap" Version="3.6.6" />
-        <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.11.0" />
-        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.11.0" />
-        <PackageReference Include="NativeFileDialogSharp" Version="0.6.0-alpha" />
         <PackageReference Include="NeutronSharpWebview" Version="*" />
     </ItemGroup>
 
