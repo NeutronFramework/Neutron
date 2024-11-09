@@ -10,15 +10,39 @@ public class Application
     private WebContent webContent;
     private Webview webview;
 
+    /// <summary>
+    /// The title of the application
+    /// </summary>
     public string Title { get; private set; }
 
+    /// <summary>
+    /// The width of the application
+    /// </summary>
     public int Width { get; private set; }
+
+    /// <summary>
+    /// The height of the application
+    /// </summary>
     public int Height { get; private set; }
 
+    /// <summary>
+    /// The minimum width of the application
+    /// </summary>
     public int MinWidth { get; private set; }
+
+    /// <summary>
+    /// The minimum height of the application
+    /// </summary>
     public int MinHeight { get; private set; }
 
+    /// <summary>
+    /// The maximum width of the application
+    /// </summary>
     public int MaxWidth { get; private set; }
+
+    /// <summary>
+    /// The maximum height of the application
+    /// </summary>
     public int MaxHeight { get; private set; }
 
     public delegate T BindingFunction<T>();
@@ -34,6 +58,15 @@ public class Application
     public delegate T11 BindingFunction<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11>(T1? param1, T2? param2, T3? param3, T4? param4, T5? param5, T6? param6, T7? param7, T8? param8, T9? param9, T10? param10);
 
 
+    /// <summary>
+    /// Your application
+    /// </summary>
+    /// <param name="title">The title of the application</param>
+    /// <param name="width">The width of the application</param>
+    /// <param name="height">The height of the application</param>
+    /// <param name="webContentPath">The webContentPath of the frontend, i.e the dist folder that is generated from npm build</param>
+    /// <param name="debug">Enable debug mode or not, debug mode will contains the brower console, very useful for debugging</param>
+    /// <param name="interceptExternalLinks"> Set to true, top open external links in system browser</param>
     public Application(string title, int width, int height, string webContentPath, bool debug = false, bool interceptExternalLinks = false)
     {
         Title = title;
@@ -81,7 +114,7 @@ public class Application
     /// Binds a callback so that it will appear under the given name as a global javascript function with 0 parameters
     /// </summary>
     /// <param name="name">Global name of the javascript function</param>
-    /// <typeparam name="T">The return type</typeparam>
+    /// <typeparam name="T">The return type that will get send back to js</typeparam>
     /// <param name="callback">Callback with 0 parameter and returning a variable with type T to be sent back to javascript</param>
     public void Bind<T>(string name, BindingFunction<T> callback)
     {
@@ -93,8 +126,8 @@ public class Application
     /// <summary>
     /// Binds a callback so that it will appear under the given name as a global javascript function with 1 parameter
     /// </summary>
-    /// <typeparam name="T">The first parameter type</typeparam>
-    /// <typeparam name="T1">The return type</typeparam>
+    /// <typeparam name="T">The first parameter type that we will get from js</typeparam>
+    /// <typeparam name="T1">The return type that will get send back to js</typeparam>
     /// <param name="name">Global name of the javascript function</param>
     /// <param name="callback">Callback with 1 parameter that is the javascript function parameter and returning a variable with type T1 to be sent back to javascript</param>
     /// <exception cref="Exception">Exception is thrown when it failed to deserialize</exception>
@@ -120,9 +153,9 @@ public class Application
     /// <summary>
     /// Binds a callback so that it will appear under the given name as a global javascript function with 2 parameters
     /// </summary>
-    /// <typeparam name="T1">The first parameter type</typeparam>
-    /// <typeparam name="T2">The second parameter type</typeparam>
-    /// <typeparam name="T3">The return type</typeparam>
+    /// <typeparam name="T1">The first parameter type that we will get from js</typeparam>
+    /// <typeparam name="T2">The second parameter type that we will get from js</typeparam>
+    /// <typeparam name="T3">The return type that will get send back to js</typeparam>
     /// <param name="name">Global name of the javascript function</param>
     /// <param name="callback">Callback with 2 parameters that is the javascript function parameters and returning a variable with type T3 to be sent back to javascript</param>
     /// <exception cref="Exception">Exception is thrown when it failed to deserialize</exception>
