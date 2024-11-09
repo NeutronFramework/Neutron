@@ -11,37 +11,37 @@ public class Application
     private Webview webview;
 
     /// <summary>
-    /// The title of the application
+    /// The title of the application window
     /// </summary>
     public string Title { get; private set; }
 
     /// <summary>
-    /// The width of the application
+    /// The width of the application window
     /// </summary>
     public int Width { get; private set; }
 
     /// <summary>
-    /// The height of the application
+    /// The height of the application window
     /// </summary>
     public int Height { get; private set; }
 
     /// <summary>
-    /// The minimum width of the application
+    /// The minimum width of the application window
     /// </summary>
     public int MinWidth { get; private set; }
 
     /// <summary>
-    /// The minimum height of the application
+    /// The minimum height of the application window
     /// </summary>
     public int MinHeight { get; private set; }
 
     /// <summary>
-    /// The maximum width of the application
+    /// The maximum width of the application window
     /// </summary>
     public int MaxWidth { get; private set; }
 
     /// <summary>
-    /// The maximum height of the application
+    /// The maximum height of the application window
     /// </summary>
     public int MaxHeight { get; private set; }
 
@@ -61,9 +61,9 @@ public class Application
     /// <summary>
     /// Your application
     /// </summary>
-    /// <param name="title">The title of the application</param>
-    /// <param name="width">The width of the application</param>
-    /// <param name="height">The height of the application</param>
+    /// <param name="title">The title of the application window</param>
+    /// <param name="width">The width of the application window</param>
+    /// <param name="height">The height of the application window</param>
     /// <param name="webContentPath">The webContentPath of the frontend, i.e the dist folder that is generated from npm build</param>
     /// <param name="debug">Enable debug mode or not, debug mode will contains the brower console, very useful for debugging</param>
     /// <param name="interceptExternalLinks"> Set to true, top open external links in system browser</param>
