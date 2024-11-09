@@ -495,19 +495,19 @@ public class Application
     }
 
     /// <summary>
-    /// Set the title of the window
+    /// Set the title of the application window
     /// </summary>
-    /// <param name="title">The title of the window</param>
+    /// <param name="title">The title of the application window</param>
     public void SetTitle(string title)
     {
         webview.SetTitle(title);
     }
 
     /// <summary>
-    /// Set the minimum size of the window
+    /// Set the minimum size of the application window
     /// </summary>
-    /// <param name="width">The minimum width of the window</param>
-    /// <param name="height">The minimum height of the window</param>
+    /// <param name="width">The minimum width of the application window</param>
+    /// <param name="height">The minimum height of the application window</param>
     public void SetMinSize(int width, int height)
     {
         MinWidth = width;
@@ -517,10 +517,10 @@ public class Application
     }
 
     /// <summary>
-    /// Set the maximum size of the window
+    /// Set the maximum size of the application window
     /// </summary>
-    /// <param name="width">The maximum width of the window</param>
-    /// <param name="height">The maximum height of the window</param>
+    /// <param name="width">The maximum width of the application window</param>
+    /// <param name="height">The maximum height of the application window</param>
     public void SetMaxSize(int width, int height)
     {
         MaxWidth = width;
@@ -530,10 +530,10 @@ public class Application
     }
 
     /// <summary>
-    /// Set the size of the window
+    /// Set the size of the application window
     /// </summary>
-    /// <param name="width">The width of the window</param>
-    /// <param name="height">The height of the window</param>
+    /// <param name="width">The width of the application window</param>
+    /// <param name="height">The height of the application window</param>
     public void SetSize(int width, int height)
     {
         Width = width;
@@ -543,7 +543,7 @@ public class Application
     }
 
     /// <summary>
-    /// Maximize the window
+    /// Maximize the application window
     /// </summary>
     public void Maximize()
     {
@@ -551,7 +551,7 @@ public class Application
     }
 
     /// <summary>
-    /// Minimize the window
+    /// Minimize the application window
     /// </summary>
     public void Minimize()
     {
@@ -559,7 +559,7 @@ public class Application
     }
 
     /// <summary>
-    /// Center the window
+    /// Center the application window
     /// </summary>
     public void Center()
     {
