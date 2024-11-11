@@ -57,6 +57,11 @@ public static class Builder
                                  .WithWorkingDirectory(projectConfig.FrontendName)
                                  .WithStandardOutputPipe(PipeTarget.ToDelegate(Console.WriteLine))
                                  .ExecuteBufferedAsync();
+            
+            if (Directory.Exists(Path.Combine(projectConfig.FrontendName, "build")))
+            {
+                Directory.Move(Path.Combine(projectConfig.FrontendName, "build"), Path.Combine(projectConfig.FrontendName, "dist"));
+            }
 
             if (Directory.Exists(Path.Combine(projectConfig.BackendName, "dist")))
             {

@@ -2,6 +2,8 @@
 using System.Text.Json;
 
 namespace NeutronCli.Scripts.Components;
+
+
 public static class Templates
 {
     public static string BackendProgramCSBuilder(string projectName, string frontendName)
@@ -52,10 +54,32 @@ internal class Program
   </PropertyGroup>
   
   <Target Name="BuildFrontend">
-    <Exec Command="neutroncli build --frontend" WorkingDirectory="../" />
-    
+    <Message Text="Working Directory: $([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)../'))"/>
+    <Message Text="Executing Command: neutroncli build --frontend" Importance="high" />
+
+    <Exec 
+        Command="neutroncli build --frontend 2>&amp;1"
+        WorkingDirectory="../"
+        ConsoleToMSBuild="true"
+        StandardOutputImportance="High"
+        StandardErrorImportance="High"
+        EchoOff="false"
+        IgnoreExitCode="true">
+        <Output TaskParameter="ConsoleOutput" PropertyName="RawOutput" />
+        <Output TaskParameter="ExitCode" PropertyName="ErrorCode" />
+    </Exec>
+
+    <PropertyGroup>
+        <FormattedOutput>$([System.String]::Join('%0D%0A    ', $(RawOutput.Split(';'))))</FormattedOutput>
+    </PropertyGroup>
+
+    <Message Text="Build Output:%0D%0A    $(FormattedOutput)" Importance="high" />
+    <Error 
+        Text="Frontend build failed with exit code $(ErrorCode).%0D%0A%0D%0AOutput:%0D%0A    $(FormattedOutput)" 
+        Condition="'$(ErrorCode)' != '0'" />
+
     <ItemGroup>
-      <DistFiles Include="dist\**" />
+        <DistFiles Include="dist\**" />
     </ItemGroup>
   </Target>
 

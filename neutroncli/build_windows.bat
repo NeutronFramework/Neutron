@@ -1,7 +1,7 @@
 @echo off
 setlocal EnableDelayedExpansion
 
-set version=0.2.2
+set version=0.2.3
 set PROJECT_URL=https://github.com/NeutronFramework/Neutron
 
 where choco >nul 2>&1

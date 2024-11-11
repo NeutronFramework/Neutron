@@ -66,18 +66,73 @@ static class Program
                 return;
             }
 
+
             Directory.CreateDirectory(projectName);
 
             string[] frontendNameParts = Regex.Split(projectName.Replace("_", "-"), @"(?<!^)(?=[A-Z])");
             string frontendName = $"{string.Join("-", frontendNameParts).ToLower()}-frontend";
             frontendName = Regex.Replace(frontendName, "-{2,}", "-");
 
-            Console.WriteLine($"Calling npm create vite@latest {frontendName} -- --template {frontendFramework.ToString()!.Replace("_", "-")}");
+            string commandStr;
 
-            await Cli.Wrap("npm").WithArguments($"create vite@latest {frontendName} -- --template {frontendFramework.ToString()!.Replace("_", "-")}")
-                                 .WithWorkingDirectory(Path.Combine(projectName))
-                                 .WithStandardOutputPipe(PipeTarget.ToDelegate(Console.WriteLine))
-                                 .ExecuteBufferedAsync();
+            if (frontendFramework.ToString() == "svelte_kit")
+            {
+                commandStr = $"sv create {frontendName} --template minimal --types ts --no-add-ons --no-install";
+
+                Console.WriteLine($"Calling npx {commandStr}");
+
+                await Cli.Wrap("npx").WithArguments(commandStr)
+                                     .WithWorkingDirectory(Path.Combine(projectName))
+                                     .WithStandardOutputPipe(PipeTarget.ToDelegate(Console.WriteLine))
+                                     .ExecuteBufferedAsync();
+            }
+            else
+            {
+                commandStr = $"create vite@latest {frontendName} -- --template {frontendFramework.ToString()!.Replace("_", "-")}";
+
+                Console.WriteLine($"Calling npm {commandStr}");
+
+                await Cli.Wrap("npm").WithArguments(commandStr)
+                                     .WithWorkingDirectory(Path.Combine(projectName))
+                                     .WithStandardOutputPipe(PipeTarget.ToDelegate(Console.WriteLine))
+                                     .ExecuteBufferedAsync();
+            }
+
+            commandStr = "install -D @sveltejs/adapter-static";
+
+            Console.WriteLine($"Calling npm {commandStr}");
+            await Cli.Wrap("npm").WithArguments(commandStr)
+                                    .WithWorkingDirectory(Path.Combine(projectName, frontendName))
+                                    .WithStandardOutputPipe(PipeTarget.ToDelegate(Console.WriteLine))
+                                    .ExecuteBufferedAsync();
+
+            string modifiedSvelteConfig = """
+            import adapter from '@sveltejs/adapter-static';
+            import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
+
+            /** @type {import('@sveltejs/kit').Config} */
+            const config = {
+            	// Consult https://svelte.dev/docs/kit/integrations
+            	// for more information about preprocessors
+            	preprocess: vitePreprocess(),
+
+            	kit: {
+            		// adapter-auto only supports some environments, see https://svelte.dev/docs/kit/adapter-auto for a list.
+            		// If your environment is not supported, or you settled on a specific environment, switch out the adapter.
+            		// See https://svelte.dev/docs/kit/adapters for more information about adapters.
+            		adapter: adapter()
+            	}
+            };
+
+            export default config;
+            
+            """;
+
+            File.WriteAllText(Path.Combine(projectName, frontendName, "svelte.config.js"), modifiedSvelteConfig);
+
+            string layout = "export const prerender = true;";
+
+            File.WriteAllText(Path.Combine(projectName, frontendName, "src", "routes", "+layout.ts"), layout);
 
             Directory.CreateDirectory(Path.Combine(projectName, projectName));
 
@@ -86,6 +141,20 @@ static class Program
 
             File.Copy(Path.Combine(AppContext.BaseDirectory, "icon.ico"), Path.Combine(projectName, projectName, "icon.ico"));
 
+
+            Console.WriteLine("Calling dotnet new sln");
+            await Cli.Wrap("dotnet").WithArguments("new sln")
+                                    .WithWorkingDirectory(Path.Combine(projectName, projectName))
+                                    .WithStandardOutputPipe(PipeTarget.ToDelegate(Console.WriteLine))
+                                    .ExecuteBufferedAsync();
+
+
+            Console.WriteLine($"Calling dotnet sln add {projectName}.csproj");
+            await Cli.Wrap("dotnet").WithArguments($"sln add {projectName}.csproj")
+                                    .WithWorkingDirectory(Path.Combine(projectName, projectName))
+                                    .WithStandardOutputPipe(PipeTarget.ToDelegate(Console.WriteLine))
+                                    .ExecuteBufferedAsync();
+
             Console.WriteLine("Calling dotnet add package Neutron");
             await Cli.Wrap("dotnet").WithArguments("add package Neutron")
                                     .WithWorkingDirectory(Path.Combine(projectName, projectName))
@@ -93,6 +162,20 @@ static class Program
                                     .ExecuteBufferedAsync();
 
             Templates.ProjectConfigBuilder(projectName, dotnetVersion.ToString()!, frontendName, projectName);
+
+            string gitIgnoreContent = $"""
+            {projectName}/.vs
+            {projectName}/bin
+            {projectName}/obj
+            {projectName}/dist
+            {frontendName}/bin
+            {frontendName}/obj
+            {frontendName}/node_modules
+            .vs/
+            """.Trim();
+
+            File.WriteAllText(Path.Combine(projectName, ".gitignore"), gitIgnoreContent);
+
 
         }, projectName, dotnetVersion, frontendFramework);
 
