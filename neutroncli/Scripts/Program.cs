@@ -175,8 +175,6 @@ static class Program
             """.Trim();
 
             File.WriteAllText(Path.Combine(projectName, ".gitignore"), gitIgnoreContent);
-
-
         }, projectName, dotnetVersion, frontendFramework);
 
         Command runProject = new Command("run", "Run a neutron project, should be run in the project directory root, aka the one containing config.json");
