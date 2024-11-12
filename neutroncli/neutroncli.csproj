@@ -7,7 +7,6 @@
         <WarningsAsErrors>Nullable</WarningsAsErrors>
         <InvariantGlobalization>True</InvariantGlobalization>
         <JsonSerializerIsReflectionEnabledByDefault>False</JsonSerializerIsReflectionEnabledByDefault>
-        <PublishTrimmed>True</PublishTrimmed>
         <PublishAot>True</PublishAot>
     </PropertyGroup>
 
