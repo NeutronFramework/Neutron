@@ -44,7 +44,7 @@ or pass it directly <br/>
 or you can go to the c# project directory part and type<br/>
 ```dotnet publish --configuration Release --runtime win-x64 --self-contained```<br/><br/>
 i recommend you distribute your application using an installer or a package manager<br/>
-so that it can enable loopback on windows or install webkit2gtk on linux during app installation<br/>
+so that it can install webkit2gtk and libgtk3 on linux during app installation<br/>
 so the user wouldn't need do anything extra<br/>
-my suggestion is use https://velopack.io/
+my suggestion is to use https://velopack.io/
 it's crossplatform and really easy to setup
