@@ -2,7 +2,7 @@
 <package>
     <metadata>
         <id>neutroncli</id>
-        <version>0.2.4</version>
+        <version>0.2.5</version>
         <title>neutroncli</title>
         <authors>AnnasVirtual</authors>
         <owners>AnnasVirtual</owners>

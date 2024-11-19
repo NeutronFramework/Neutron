@@ -4,7 +4,6 @@ Build apps with c# and web technologies using webview
 # Prerequisite Windows
 - Node js, install it from https://nodejs.org/en or use NVM (Node Version Manager) to easily install and manage multiple nodejs installations https://github.com/coreybutler/nvm-windows
 - Dotnet SDK, use the version you want to target, this framework support .Net 7, and 8 https://dotnet.microsoft.com/en-us/
-- Enable Loopback, you need to enable the Loopback to make webview works on windows, run `CheckNetIsolation LoopbackExempt -a -n="Microsoft.win32webviewhost_cw5n1h2txyewy"` with an elevated permission powershell, your user of your application also need to do that, it's recommended to use an installer when distributing your application so you can enable loopback in the installation script 
 
 # Prerequisite Linux
 - Node js, install it from https://nodejs.org/en or use NVM (Node Version Manager) to easily install and manage multiple nodejs installations https://github.com/nvm-sh/nvm
@@ -47,4 +46,5 @@ or you can go to the c# project directory part and type<br/>
 i recommend you distribute your application using an installer or a package manager<br/>
 so that it can enable loopback on windows or install webkit2gtk on linux during app installation<br/>
 so the user wouldn't need do anything extra<br/>
-i might add `neutrocli package` that package the app automatically and do everything that it need to run in the installer so you don't have to
+my suggestion is use https://velopack.io/
+it's crossplatform and really easy to setup

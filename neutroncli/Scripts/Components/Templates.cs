@@ -18,15 +18,30 @@ internal class Program
     [STAThread]
     static void Main(string[] args)
     {
-        Application application;
+        if (OperatingSystem.IsWindows())
+        {
+            ProcessStartInfo processInfo = new()
+            {
+                FileName = "cmd.exe",
+                Arguments = "/c CheckNetIsolation LoopbackExempt -a -n=Microsoft.win32webviewhost_cw5n1h2txyewy",
+                UseShellExecute = false,
+                CreateNoWindow = false,
+            };
+
+            Process.Start(processInfo);
+        }
+
+        bool debug;
 
 #if DEBUG
-        application = new Application(title: "{{projectName}}", width: 960, height: 540, webContentPath: Path.Combine(AppContext.BaseDirectory, "dist"), debug: true);
+        debug = true;
 #else
-        application = new Application(title: "{{projectName}}", width: 960, height: 540, webContentPath: Path.Combine(AppContext.BaseDirectory, "dist"));
+        debug = false;
 #endif
-        application.Center();
 
+        Application application = new Application(title: "{{projectName}}", width: 960, height: 540, webContentPath: Path.Combine(AppContext.BaseDirectory, "dist"), debug);
+
+        application.Center();
         application.Run();
     }
 }
