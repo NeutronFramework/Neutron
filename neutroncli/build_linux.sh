@@ -1,6 +1,6 @@
 #!/bin/bash
 
-version="0.2.5"
+version="0.2.6"
 
 if [ ! -d build ]; then
     mkdir build
@@ -44,7 +44,7 @@ if [ $? -ne 0 ]; then
 fi
 
 cd publish || exit
-zip -r "../neutroncli_${version}_linux_86_64.zip" ./*
+zip -r "../neutroncli_${version}_linux_x86_64.zip" ./*
 
 if [ $? -ne 0 ]; then
     echo "Compression failed."
@@ -53,7 +53,7 @@ fi
 
 cd ..
 
-mv "neutroncli_${version}_linux_86_64.zip" artifacts/
+mv "neutroncli_${version}_linux_x86_64.zip" artifacts/
 
 if [ $? -ne 0 ]; then
     echo "Move failed."

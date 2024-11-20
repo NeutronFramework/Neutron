@@ -8,7 +8,6 @@ try {
         Remove-Item $installDir -Recurse -Force -ErrorAction Stop
         Write-Host "neutroncli uninstalled successfully."
         
-        Uninstall-ChocolateyPath $installDir 'user'
     } else {
         Write-Host "neutroncli installation directory not found. Nothing to uninstall."
     }

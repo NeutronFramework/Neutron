@@ -10,7 +10,7 @@ try {
     Write-Host "neutroncli installed in $installDir"
     
     Install-ChocolateyPath $installDir 'user'
-    Write-Host "Added $installDir to USER PATH"
+    Write-Host "Added $installDir to User Path"
 } catch {
     Write-Host "Failed to install neutroncli: $_"
     exit 1

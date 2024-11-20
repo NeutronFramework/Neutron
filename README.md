@@ -13,7 +13,7 @@ Build apps with c# and web technologies using webview
 # Initializing The Project
 Download the [neutroncli](https://github.com/NeutronFramework/Neutron/releases)<br/><br/>
 or for windows you can also use chocolatey, launch an elevated powershell and type<br/>
-```choco install neutroncli```<br/><br/>
+```choco install neutroncli --version=0.2.6```<br/><br/>
 or download the chocolatey package from [neutroncli](https://github.com/NeutronFramework/Neutron/releases) make a folder, put the package inside, launch an elevated powershell, and type<br/>
 ```choco install neutroncli --source "path/to/folder/containing/chocolatey"```<br/><br/>
 for flatpak you need to install it using sudo for example<br/>

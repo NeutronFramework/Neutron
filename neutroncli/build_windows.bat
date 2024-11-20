@@ -1,7 +1,7 @@
 @echo off
 setlocal EnableDelayedExpansion
 
-set version=0.2.5
+set version=0.2.6
 set PROJECT_URL=https://github.com/NeutronFramework/Neutron
 
 where choco >nul 2>&1
@@ -38,7 +38,7 @@ if %errorlevel% neq 0 (
 )
 
 cd publish
-tar -a -cf ..\neutroncli_%version%_win_86_64.zip *.*
+tar -a -cf ..\neutroncli_%version%_win_x86_64.zip *.*
 
 if %errorlevel% neq 0 (
     echo Compression failed.
@@ -46,7 +46,7 @@ if %errorlevel% neq 0 (
 )
 
 cd ..
-move neutroncli_%version%_win_86_64.zip artifacts\
+move neutroncli_%version%_win_x86_64.zip artifacts\
 
 if %errorlevel% neq 0 (
     echo Move failed.

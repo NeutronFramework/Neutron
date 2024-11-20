@@ -10,6 +10,7 @@ public static class Templates
     {
         return $$"""
 using Neutron.Scripts;
+using System.Diagnostics;
 
 namespace {{projectName}};
 
